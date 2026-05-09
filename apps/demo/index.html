@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kortex — Demo</title>
+    <style>
+      :root { color-scheme: dark; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #0a0c10;
+        color: #d8e0e8;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        overflow: hidden;
+      }
+      #app { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; }
+      .hint {
+        position: absolute;
+        left: 8px;
+        bottom: 8px;
+        padding: 6px 10px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+        font: 11px/1.5 ui-monospace, Menlo, monospace;
+        opacity: 0.65;
+        pointer-events: none;
+        user-select: none;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="hint">drag = orbit | shift+drag / right-drag = pan | wheel = zoom</div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

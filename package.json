@@ -1,0 +1,26 @@
+{
+  "name": "kortex",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@kortex/demo",
+    "dev:demo": "npm run dev --workspace=@kortex/demo",
+    "build": "npm run build --workspaces --if-present",
+    "build:core": "npm run build --workspace=@kortex/core",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "ts": "npm run ts --workspaces --if-present",
+    "ci": "npm run ts && npm run lint && npm run test"
+  },
+  "devDependencies": {
+    "prettier": "3.8.3",
+    "typescript": "6.0.3",
+    "vite": "8.0.11"
+  }
+}

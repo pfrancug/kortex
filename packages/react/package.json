@@ -1,0 +1,15 @@
+{
+  "name": "@kortex/react",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@kortex/core": "file:../core"
+  },
+  "scripts": {
+    "ts": "tsc --noEmit"
+  }
+}
