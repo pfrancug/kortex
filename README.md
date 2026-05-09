@@ -29,4 +29,8 @@ npm run test        # tests where configured (e.g. core)
 npm run build       # build workspaces that define `build`
 ```
 
+## License
+
+[MIT](./LICENSE) © Piotr Francug.
+
 Open tasks and roadmap priorities live in **[docs/TODO.md](./docs/TODO.md)** (linked from **[AGENTS.md](./AGENTS.md)** for tooling).
