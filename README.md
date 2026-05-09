@@ -1,14 +1,14 @@
 # Kortex
 
-**Kortex** is a toolkit for **interactive 3D graph visualization** in the browser: **WebGL2** rendering (no Three.js in the core stack), **large-graph** oriented LOD and chunking, optional **force-directed layout** in a worker, and **picking** / labels for usable UIs.
+**Kortex** is a **GPU-first** toolkit for **interactive 3D graph visualization** in the browser. The core ships a **custom WebGL2** pipeline—batched node billboards, chunked edges, frustum-aware draws, and **LOD** for large graphs—built on **typed arrays and first-party shaders**, not a bundled scene engine. Optional **force-directed layout** runs in a worker; **picking** and **labels** round out usable UIs.
 
 This repository is a **workspace monorepo**:
 
-| Package             | Role                                                                                      |
-| ------------------- | ----------------------------------------------------------------------------------------- |
-| **`@kortex/core`**  | Framework-agnostic engine: renderer, graph buffers, layout, parsers, interaction helpers. |
-| **`@kortex/demo`**  | Reference **Vite** app showing how to wire core (datasets, panel, export).                |
-| **`@kortex/react`** | Placeholder for future React bindings over core.                                          |
+| Package             | Role                                                                                                 |
+| ------------------- | ---------------------------------------------------------------------------------------------------- |
+| **`@kortex/core`**  | Framework-agnostic **WebGL2** engine: renderer, graph buffers, layout, parsers, interaction helpers. |
+| **`@kortex/demo`**  | Reference **Vite** app showing how to wire core (datasets, panel, export).                           |
+| **`@kortex/react`** | Placeholder for future React bindings over core.                                                     |
 
 **Integration:** [docs/USAGE.md](./docs/USAGE.md) · **Guidelines:** [docs/GUIDELINES.md](./docs/GUIDELINES.md) · **Backlog:** [docs/TODO.md](./docs/TODO.md) · **Shipped:** [docs/DONE.md](./docs/DONE.md) · **AI agents:** [AGENTS.md](./AGENTS.md)
 

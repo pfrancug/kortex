@@ -52,7 +52,7 @@ repo/
 | Area      | Choice                                                           |
 | --------- | ---------------------------------------------------------------- |
 | Language  | TypeScript (strict)                                              |
-| Rendering | **WebGL2** — custom shaders, no Three.js in core                 |
+| Rendering | **WebGL2** — custom shaders, no bundled scene engine in core     |
 | Shaders   | GLSL embedded / colocated with render modules                    |
 | Data      | `Float32Array`, `Uint32Array`, `Uint8Array` as canonical buffers |
 | Threading | Web Workers for parse + force simulation                         |
