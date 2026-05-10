@@ -1,4 +1,4 @@
-# Kortex — completed work
+# Nexgraph — completed work
 
 Historical milestone checklist: **what has shipped**. Active backlog lives in **[TODO.md](./TODO.md)**. Norms and rules: **[GUIDELINES.md](./GUIDELINES.md)**.
 
@@ -46,7 +46,7 @@ _Experimental stress targets (5M / 15M edges) remain backlog items — see **[TO
 
 ## Packaging & demo (Phases 8–9)
 
-- [x] Scoped **`@kortex/core`** exports, `sideEffects: false`, build emits types
+- [x] Scoped **`@nexgraph/core`** exports, `sideEffects: false`, build emits types
 - [x] **`apps/demo`**: file/URL load, settings panel, LOD toggles, synthetic presets to large scales, export JSON
 
 ---
@@ -68,7 +68,7 @@ _Gaps:_ dedicated label/SDF tests; optional hover-priority label LOD enhancement
 - [x] Demo: Auto Layout / Stop / Reset seed, physics presets, advanced sliders
 - [x] Parameter bundles: **`createForceConfigPreset`**, **`FORCE_LAYOUT_DEFAULTS`**
 - [x] Edge weight plumbing + **`edgeWeightInfluence`** modes (with tests on small graphs)
-- [x] Unified link pass (**`applyLinkPassesSinglePass`**) for **`d3_like`** vs **`kortex_custom`**
+- [x] Unified link pass (**`applyLinkPassesSinglePass`**) for **`d3_like`** vs **`nexgraph_custom`**
 
 _Gaps:_ dedicated octree/worker convergence tests; optional **`collision(radius)`** force — **[TODO.md](./TODO.md)**.
 
@@ -81,11 +81,11 @@ _Gaps:_ dedicated octree/worker convergence tests; optional **`collision(radius)
 
 ---
 
-## `@kortex/react` (Phase 12 — MVP)
+## `@nexgraph/react` (Phase 12 — MVP)
 
-- [x] **`KortexCanvas`** — lifecycle-safe **`Renderer`**, forwards **`RendererOptions`** (`parent` internal); **`autoStart`**, **`onReady`**; declarative **`dataset`** / **`graph`**; optional auto **`ForceLayout`** when topology-only JSON suggests layout (`packages/react/src/KortexCanvas.tsx`)
-- [x] **`peerDependencies`**: `react`, `react-dom`; ESM **`dist/`** + declarations (`npm run build --workspace=@kortex/react`)
-- [x] **`apps/react-demo`** — **`KortexCanvas`** sample (**`npm run dev:react-demo`**, port 5174)
+- [x] **`NexgraphCanvas`** — lifecycle-safe **`Renderer`**, forwards **`RendererOptions`** (`parent` internal); **`autoStart`**, **`onReady`**; declarative **`dataset`** / **`graph`**; optional auto **`ForceLayout`** when topology-only JSON suggests layout (`packages/react/src/NexgraphCanvas.tsx`)
+- [x] **`peerDependencies`**: `react`, `react-dom`; ESM **`dist/`** + declarations (`npm run build --workspace=@nexgraph/react`)
+- [x] **`apps/react-demo`** — **`NexgraphCanvas`** sample (**`npm run dev:react-demo`**, port 5174)
 
 _Follow-ups:_ **[TODO.md](./TODO.md)** — **`useCamera`**, **`usePicking`**, **`@testing-library/react`**.
 
@@ -102,6 +102,6 @@ Partial suites today: **`GraphStore`**, **`LODController`**, **`ClusterLOD`**, *
 | Doc                              | Purpose                         |
 | -------------------------------- | ------------------------------- |
 | [GUIDELINES.md](./GUIDELINES.md) | Architecture & dependency rules |
-| [USAGE.md](./USAGE.md)           | Embedding **`@kortex/core`**    |
+| [USAGE.md](./USAGE.md)           | Embedding **`@nexgraph/core`**    |
 | [TODO.md](./TODO.md)             | Open tasks                      |
 | [../AGENTS.md](../AGENTS.md)     | Agent workflow                  |

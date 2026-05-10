@@ -22,25 +22,25 @@ import {
   type GraphStore,
   type ParseResult,
   type RendererOptions,
-} from '@kortex/core';
+} from '@nexgraph/core';
 
-/** RGB triple **0–255** returned by {@link KortexNodeColorFn} / {@link KortexEdgeColorFn}; alpha is filled as **255** on the GPU (use **`nodeOpacity`** / **`edgeOpacity`**). */
-export type KortexRgb = readonly [number, number, number];
+/** RGB triple **0–255** returned by {@link NexgraphNodeColorFn} / {@link NexgraphEdgeColorFn}; alpha is filled as **255** on the GPU (use **`nodeOpacity`** / **`edgeOpacity`**). */
+export type NexgraphRgb = readonly [number, number, number];
 
-/** Context for {@link KortexNodeColorFn} (aligned with ForceGraph **`nodeColor`**). */
-export type KortexNodeColorContext = {
+/** Context for {@link NexgraphNodeColorFn} (aligned with ForceGraph **`nodeColor`**). */
+export type NexgraphNodeColorContext = {
   nodeIndex: number;
   /** From {@link GraphStore.labels} when that entry exists. */
   label?: string;
-  /** `nodeColorData[nodeIndex]` when {@link KortexCanvasProps.nodeColorData} is long enough. */
+  /** `nodeColorData[nodeIndex]` when {@link NexgraphCanvasProps.nodeColorData} is long enough. */
   data?: unknown;
 };
 
-/** Same shape as {@link KortexNodeColorContext} — passed to **`onNodeClick`**; **`null`** means background click. */
-export type KortexNodeClickContext = KortexNodeColorContext;
+/** Same shape as {@link NexgraphNodeColorContext} — passed to **`onNodeClick`**; **`null`** means background click. */
+export type NexgraphNodeClickContext = NexgraphNodeColorContext;
 
 /** Imperative API (e.g. **`zoomToFit`** like steam-group-joiner **`ForceGraph`** ref). */
-export interface KortexCanvasHandle {
+export interface NexgraphCanvasHandle {
   /** Fits orbit camera to current node bounds ({@link Renderer.fitToData}). */
   zoomToFit: () => void;
   /** Sets orbit distance from target (preserves azimuth / elevation). */
@@ -69,24 +69,24 @@ export function clampOrbitDistance(distance: number): number {
 export const DEFAULT_AUTO_ROTATE_SPEED = 0.08;
 
 /** Per-node tint callback; closure can carry selection / search state like **`react-force-graph`** **`nodeColor`**. */
-export type KortexNodeColorFn = (ctx: KortexNodeColorContext) => KortexRgb;
+export type NexgraphNodeColorFn = (ctx: NexgraphNodeColorContext) => NexgraphRgb;
 
-/** Context for {@link KortexEdgeColorFn} (aligned with ForceGraph **`linkColor`**). */
-export type KortexEdgeColorContext = {
+/** Context for {@link NexgraphEdgeColorFn} (aligned with ForceGraph **`linkColor`**). */
+export type NexgraphEdgeColorContext = {
   edgeIndex: number;
   sourceIndex: number;
   targetIndex: number;
-  /** `edgeColorData[edgeIndex]` when {@link KortexCanvasProps.edgeColorData} is long enough. */
+  /** `edgeColorData[edgeIndex]` when {@link NexgraphCanvasProps.edgeColorData} is long enough. */
   data?: unknown;
 };
 
 /** Per-edge tint callback; closure can carry selection / match state like **`linkColor`**. */
-export type KortexEdgeColorFn = (ctx: KortexEdgeColorContext) => KortexRgb;
+export type NexgraphEdgeColorFn = (ctx: NexgraphEdgeColorContext) => NexgraphRgb;
 
-function applyKortexNodeColors(
+function applyNexgraphNodeColors(
   graph: GraphStore,
   nodeColors: Uint8Array | null | undefined,
-  nodeColorFn: KortexNodeColorFn | undefined,
+  nodeColorFn: NexgraphNodeColorFn | undefined,
   nodeColorData: readonly unknown[] | undefined,
 ): void {
   const n = graph.nodeCount;
@@ -122,10 +122,10 @@ function applyKortexNodeColors(
   }
 }
 
-function applyKortexEdgeColors(
+function applyNexgraphEdgeColors(
   graph: GraphStore,
   edgeColors: Uint8Array | null | undefined,
-  edgeColorFn: KortexEdgeColorFn | undefined,
+  edgeColorFn: NexgraphEdgeColorFn | undefined,
   edgeColorData: readonly unknown[] | undefined,
 ): void {
   const e = graph.edgeCount;
@@ -163,11 +163,11 @@ function applyKortexEdgeColors(
 }
 
 /** JSON object passed to {@link parseGraphAsync} (`'json'`), or pre-serialized UTF-8 text. */
-export type KortexCanvasDataset = GraphJsonDocument | string;
+export type NexgraphCanvasDataset = GraphJsonDocument | string;
 
 /** Input text for {@link parseGraphAsync} in JSON mode, or `null` to skip loading. */
 function datasetPayloadForWorker(
-  dataset: KortexCanvasDataset | null | undefined,
+  dataset: NexgraphCanvasDataset | null | undefined,
 ): string | null {
   if (dataset === undefined || dataset === null) return null;
   if (typeof dataset === 'string') {
@@ -184,7 +184,7 @@ function datasetPayloadForWorker(
  * Optional graph payload applied whenever these references change (identity counts — reuse stable buffers).
  * Omit when using **`dataset`** only.
  */
-export type KortexCanvasGraphProps = {
+export type NexgraphCanvasGraphProps = {
   positions: Float32Array;
   colors?: Uint8Array;
   sizes?: Float32Array;
@@ -198,7 +198,7 @@ export type KortexCanvasGraphProps = {
   edgeWeights?: Float32Array;
 };
 
-export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
+export type NexgraphCanvasProps = Omit<RendererOptions, 'parent'> & {
   className?: string;
   style?: CSSProperties;
   /**
@@ -217,7 +217,7 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
    * or `fetch().then(r => r.text())` for large files).
    * When set, **`graph`** is ignored.
    */
-  dataset?: KortexCanvasDataset | null;
+  dataset?: NexgraphCanvasDataset | null;
   /**
    * When **`dataset`** parses with **`layoutSuggested`**, start {@link ForceLayout} automatically.
    * @defaultValue true
@@ -240,7 +240,7 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
    * Declarative graph: applied after mount and whenever buffer references change.
    * Ignored while **`dataset`** is set.
    */
-  graph?: KortexCanvasGraphProps | null;
+  graph?: NexgraphCanvasGraphProps | null;
   /**
    * When **`true`** and **`graph`** is applied with at least one edge, run {@link ForceLayout}
    * after upload (same worker path as topology-only **`dataset`** loads).
@@ -267,10 +267,10 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
   nodeColors?: Uint8Array | null;
   /**
    * Per-node RGB (**0–255**); alpha is always **255** (use **`nodeOpacity`** for transparency).
-   * Receives {@link KortexNodeColorContext} — same idea as ForceGraph **`nodeColor`**, with optional **`nodeColorData`** for domain rows (e.g. joiner **`GraphNode`** in export order).
+   * Receives {@link NexgraphNodeColorContext} — same idea as ForceGraph **`nodeColor`**, with optional **`nodeColorData`** for domain rows (e.g. joiner **`GraphNode`** in export order).
    * Ignored when **`nodeColors`** covers all nodes.
    */
-  nodeColor?: KortexNodeColorFn;
+  nodeColor?: NexgraphNodeColorFn;
   /**
    * Parallel to node index (**length ≥ node count**); passed as **`ctx.data`** to **`nodeColor`**.
    * Use the same row order as **`dataset`** / **`graph`** nodes (e.g. the source **`nodes`** array you serialized into JSON).
@@ -288,11 +288,11 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
   edgeColors?: Uint8Array | null;
   /**
    * Per-edge RGB (**0–255**); alpha is always **255** (use **`edgeOpacity`** for transparency).
-   * Receives {@link KortexEdgeColorContext} (**`sourceIndex`** / **`targetIndex`** are **`GraphStore`** node indices) — same idea as ForceGraph **`linkColor`**.
+   * Receives {@link NexgraphEdgeColorContext} (**`sourceIndex`** / **`targetIndex`** are **`GraphStore`** node indices) — same idea as ForceGraph **`linkColor`**.
    * Optional **`edgeColorData`** passes one payload per edge (same order as **`graph.edges`** pairs / **`dataset`** **`edges`**).
    * Ignored when **`edgeColors`** covers all edges.
    */
-  linkColor?: KortexEdgeColorFn;
+  linkColor?: NexgraphEdgeColorFn;
   /**
    * Parallel to edge index (**length ≥ edge count**); passed as **`ctx.data`** to **`linkColor`**.
    */
@@ -307,7 +307,7 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
    * When set, hovered nodes use **`cursor: pointer`**. Omit to disable click handling;
    * hover label tooltip still runs when **`renderer`** is mounted.
    */
-  onNodeClick?: (node: KortexNodeClickContext | null) => void;
+  onNodeClick?: (node: NexgraphNodeClickContext | null) => void;
   /**
    * Orbit camera distance from target (clamped). Omitted when **`undefined`** — distance follows user navigation only.
    */
@@ -337,7 +337,7 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
  *
  * Props mirror {@link RendererOptions} (except **`parent`**, which is internal). All options except
  * **`contextOptions`** stay in sync after mount — **`contextOptions`** only apply when the WebGL context is
- * created; to change them, remount (e.g. put a React **`key`** on **`KortexCanvas`**).
+ * created; to change them, remount (e.g. put a React **`key`** on **`NexgraphCanvas`**).
  *
  * Pass **`dataset`** as JSON **text** (e.g. `.json` file contents) or a **serializable graph object**
  * ({@link parseGraphAsync}, JSON only). For typed GPU buffers, use **`graph`** instead (ignored while **`dataset`** is set).
@@ -346,8 +346,8 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
  * Use **`onReady`** when you need the {@link Renderer} instance (picking, custom loops, etc.).
  * Optional **`nodeColors`** / **`nodeColor`** / **`nodeColorData`** / **`nodeColorRevision`** drive per-node tint after load; **`edgeColors`** / **`linkColor`** / **`edgeColorData`** / **`edgeColorRevision`** do the same for edges (callbacks mirror ForceGraph **`nodeColor`** / **`linkColor`**). Transparency uses **`nodeOpacity`** / **`edgeOpacity`** (global).
  */
-export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
-  function KortexCanvas(props, ref): ReactElement {
+export const NexgraphCanvas = forwardRef<NexgraphCanvasHandle, NexgraphCanvasProps>(
+  function NexgraphCanvas(props, ref): ReactElement {
   const {
     className,
     style,
@@ -566,7 +566,7 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
     };
     canvas.addEventListener('pointermove', move);
 
-    const clickCtx = (idx: number | null): KortexNodeClickContext | null => {
+    const clickCtx = (idx: number | null): NexgraphNodeClickContext | null => {
       if (idx === null) return null;
       const n = graph.nodeCount;
       const dataArr = nodeColorDataRef.current;
@@ -619,13 +619,13 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
     const g = graph;
     renderer.graph.setNodes(g.positions, g.colors, g.sizes, g.labels);
     renderer.graph.setEdges(g.edges, g.edgeColors);
-    applyKortexNodeColors(
+    applyNexgraphNodeColors(
       renderer.graph,
       nodeColorsRef.current,
       nodeColorFnRef.current,
       nodeColorDataRef.current,
     );
-    applyKortexEdgeColors(
+    applyNexgraphEdgeColors(
       renderer.graph,
       edgeColorsRef.current,
       edgeColorFnRef.current,
@@ -724,13 +724,13 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
           if (fitAfterThisDatasetLoad) renderer.fitToData();
         }
 
-        applyKortexNodeColors(
+        applyNexgraphNodeColors(
           renderer.graph,
           nodeColorsRef.current,
           nodeColorFnRef.current,
           nodeColorDataRef.current,
         );
-        applyKortexEdgeColors(
+        applyNexgraphEdgeColors(
           renderer.graph,
           edgeColorsRef.current,
           edgeColorFnRef.current,
@@ -752,7 +752,7 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
 
   useEffect(() => {
     if (!renderer || renderer.graph.nodeCount === 0) return;
-    applyKortexNodeColors(
+    applyNexgraphNodeColors(
       renderer.graph,
       nodeColorsRef.current,
       nodeColorFnRef.current,
@@ -771,7 +771,7 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
 
   useEffect(() => {
     if (!renderer || renderer.graph.edgeCount === 0) return;
-    applyKortexEdgeColors(
+    applyNexgraphEdgeColors(
       renderer.graph,
       edgeColorsRef.current,
       edgeColorFnRef.current,
@@ -826,4 +826,4 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
   );
 });
 
-KortexCanvas.displayName = 'KortexCanvas';
+NexgraphCanvas.displayName = 'NexgraphCanvas';

@@ -1,5 +1,5 @@
 {
-  "name": "@kortex/demo",
+  "name": "@nexgraph/demo",
   "version": "0.0.1",
   "private": true,
   "license": "MIT",
@@ -18,6 +18,6 @@
     "ts": "tsc --noEmit"
   },
   "dependencies": {
-    "@kortex/core": "file:../../packages/core"
+    "@nexgraph/core": "file:../../packages/core"
   }
 }

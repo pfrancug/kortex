@@ -9,7 +9,7 @@ export type ForceLayoutPresetId = 'interoperability' | 'stability';
  *
  * - **`interoperability`** — `forceScaleMode: 'none'`, **`d3_like`** links, **`standard`** tick order
  *   (link → charge → center), no finish recenter.
- * - **`stability`** — `forceScaleMode: 'auto'`, **`kortex_custom`** links, **`legacy`** tick order
+ * - **`stability`** — `forceScaleMode: 'auto'`, **`nexgraph_custom`** links, **`legacy`** tick order
  *   (charge → link → center), matching pre–Phase B dense-graph tuning.
  */
 export function createForceConfigPreset(
@@ -29,7 +29,7 @@ export function createForceConfigPreset(
     case 'stability':
       return {
         forceScaleMode: 'auto',
-        linkAttractionMode: 'kortex_custom',
+        linkAttractionMode: 'nexgraph_custom',
         integrationMode: 'legacy',
         recenterOnFinish: false,
         edgeWeightInfluence: 'off',

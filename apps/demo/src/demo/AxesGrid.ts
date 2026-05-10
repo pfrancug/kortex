@@ -1,9 +1,9 @@
-import type { Camera } from '@kortex/core';
+import type { Camera } from '@nexgraph/core';
 import {
   createDynamicBuffer,
   getUniformLocations,
   linkProgram,
-} from '@kortex/core';
+} from '@nexgraph/core';
 
 const VERTEX_SOURCE = `#version 300 es
 in vec3 a_position;

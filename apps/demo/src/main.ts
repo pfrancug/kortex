@@ -13,7 +13,7 @@ import {
   type ForceScaleMode,
   type IntegrationMode,
   type LinkAttractionMode,
-} from '@kortex/core';
+} from '@nexgraph/core';
 import { AxesGrid } from './demo/AxesGrid';
 import { generateGraphAsync } from './demo/generateGraph';
 import {
@@ -601,7 +601,7 @@ panel = new SettingsPanel(
           labels: renderer.graph.labels,
           edgeWeights: importedEdgeWeights,
         });
-        triggerGraphJsonDownload(json, 'kortex-graph');
+        triggerGraphJsonDownload(json, 'nexgraph-graph');
         panel.setStatus(
           `Exported ${nc.toLocaleString()} nodes, ${ec.toLocaleString()} edges`,
         );

@@ -1,4 +1,4 @@
-# Kortex — engineering guidelines
+# Nexgraph — engineering guidelines
 
 Project philosophy, architecture rules, dependency policy, and force-layout principles.  
 For **API integration**, see **[USAGE.md](./USAGE.md)**. For **what shipped**, see **[DONE.md](./DONE.md)**. For **active work**, see **[TODO.md](./TODO.md)**.
@@ -7,7 +7,7 @@ For **API integration**, see **[USAGE.md](./USAGE.md)**. For **what shipped**, s
 
 ## Purpose & scope
 
-Kortex is a **GPU-first, framework-agnostic** **WebGL2** toolkit for **3D graph visualization** at scale (large node counts, millions of edges, LOD, workers).
+Nexgraph is a **GPU-first, framework-agnostic** **WebGL2** toolkit for **3D graph visualization** at scale (large node counts, millions of edges, LOD, workers).
 
 ### Focus
 
@@ -17,7 +17,7 @@ Kortex is a **GPU-first, framework-agnostic** **WebGL2** toolkit for **3D graph 
 
 ### Explicit boundaries
 
-- **Core (`@kortex/core`)** must not depend on React or UI frameworks.
+- **Core (`@nexgraph/core`)** must not depend on React or UI frameworks.
 - **`apps/demo`** and **`apps/react-demo`** are reference wiring surfaces only — not the product API.
 - Heavy algorithms belong in **workers** (or future WASM); avoid blocking the main thread.
 
@@ -30,17 +30,17 @@ _(Historical MVP docs listed “layouts” as out of scope; **force-directed lay
 ```txt
 repo/
   packages/
-    core/     # @kortex/core — renderer, graph store, layout, parsers
-    react/    # @kortex/react — thin bindings (KortexCanvas)
+    core/     # @nexgraph/core — renderer, graph store, layout, parsers
+    react/    # @nexgraph/react — thin bindings (NexgraphCanvas)
   apps/
-    demo/        # @kortex/demo — Vite + TypeScript (vanilla UI)
-    react-demo/  # @kortex/react-demo — Vite + React sample
+    demo/        # @nexgraph/demo — Vite + TypeScript (vanilla UI)
+    react-demo/  # @nexgraph/react-demo — Vite + React sample
 ```
 
 **Rules**
 
 - `packages/core` MUST NOT depend on React.
-- **`apps/react-demo`** consumes **`@kortex/core`** and **`@kortex/react`** via workspace deps only (treat like external consumers).
+- **`apps/react-demo`** consumes **`@nexgraph/core`** and **`@nexgraph/react`** via workspace deps only (treat like external consumers).
 - Keep generated build artifacts out of version control.
 - Workspace tooling: **npm workspaces** (root `package.json`).
 
@@ -48,7 +48,7 @@ repo/
 
 ## Tech stack
 
-### `@kortex/core`
+### `@nexgraph/core`
 
 | Area      | Choice                                                           |
 | --------- | ---------------------------------------------------------------- |
@@ -69,7 +69,7 @@ repo/
 
 | Area    | Choice                          |
 | ------- | ------------------------------- |
-| UI      | **React** + **`@kortex/react`** |
+| UI      | **React** + **`@nexgraph/react`** |
 | Bundler | Vite (`@vitejs/plugin-react`)   |
 
 ---
@@ -87,7 +87,7 @@ See **`packages/core/package.json`** for actual runtime and dev dependencies.
 Do **not** add:
 
 - `react`, `react-dom`, R3F, Drei
-- Third-party graph visualization or embedding stacks as **runtime** dependencies of core — use `@kortex/core` as the renderer/layout surface instead
+- Third-party graph visualization or embedding stacks as **runtime** dependencies of core — use `@nexgraph/core` as the renderer/layout surface instead
 - `lodash`, `rxjs`, UI state libs (`redux`, `zustand`, …) in core
 - Heavy GUI libs in core (`dat.gui`, …) — demo-only concerns
 
@@ -121,14 +121,14 @@ Shippable when:
 
 - Very large edge counts remain usable with LOD controls
 - Camera interaction stays responsive
-- **`@kortex/core`** stays embeddable without React
+- **`@nexgraph/core`** stays embeddable without React
 - Graph mutations remain buffer-oriented and predictable
 
 ---
 
 ## Force-directed layout — principles
 
-Force simulation lives in **`ForceWorker`** / **`ForceLayout`** (**`@kortex/core`**). We **do not** vendor third-party layout or WebGL graph products as source; **interoperability** presets are behavioral tuning only.
+Force simulation lives in **`ForceWorker`** / **`ForceLayout`** (**`@nexgraph/core`**). We **do not** vendor third-party layout or WebGL graph products as source; **interoperability** presets are behavioral tuning only.
 
 1. **Unified model** — Knobs compose predictably; document precedence when settings overlap.
 2. **Stable defaults** — Deterministic cooling, bounded iterations, no silent blow-ups.
@@ -146,7 +146,7 @@ Force simulation lives in **`ForceWorker`** / **`ForceLayout`** (**`@kortex/core
 
 ### Parameter surface
 
-Behavior flows through **`ForceConfig`** (worker), **`ForceLayout`** merge rules, and **`@kortex/core`** exports. The demo exposes a subset (presets, center gravity, edge length multiplier, advanced section).
+Behavior flows through **`ForceConfig`** (worker), **`ForceLayout`** merge rules, and **`@nexgraph/core`** exports. The demo exposes a subset (presets, center gravity, edge length multiplier, advanced section).
 
 See **`FORCE_LAYOUT_DEFAULTS`**, **`createForceConfigPreset`**, and **`ForceWorker.ts`** header/TSDoc for authoritative fields.
 
@@ -161,8 +161,8 @@ See **`FORCE_LAYOUT_DEFAULTS`**, **`createForceConfigPreset`**, and **`ForceWork
 
 | Document                         | Role                                    |
 | -------------------------------- | --------------------------------------- |
-| [README.md](../README.md)        | Repo entry: what Kortex is, run demo    |
-| [USAGE.md](./USAGE.md)           | Packages & embedding **`@kortex/core`** |
+| [README.md](../README.md)        | Repo entry: what Nexgraph is, run demo    |
+| [USAGE.md](./USAGE.md)           | Packages & embedding **`@nexgraph/core`** |
 | [GUIDELINES.md](./GUIDELINES.md) | This file — engineering norms           |
 | [DONE.md](./DONE.md)             | Completed milestones                    |
 | [TODO.md](./TODO.md)             | Single active backlog                   |

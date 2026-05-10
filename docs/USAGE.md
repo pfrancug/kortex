@@ -1,12 +1,12 @@
-# Kortex — package roles & app integration
+# Nexgraph — package roles & app integration
 
 **Related docs:** [GUIDELINES.md](./GUIDELINES.md) · [DONE.md](./DONE.md) · [TODO.md](./TODO.md) · [../AGENTS.md](../AGENTS.md) · [../README.md](../README.md)
 
-This repo is an npm workspace monorepo. **`@kortex/core`** is the engine; **`@kortex/demo`** is the vanilla reference app; **`apps/react-demo`** is a **React + Vite** sample; **`@kortex/react`** ships **`KortexCanvas`** (see below).
+This repo is an npm workspace monorepo. **`@nexgraph/core`** is the engine; **`@nexgraph/demo`** is the vanilla reference app; **`apps/react-demo`** is a **React + Vite** sample; **`@nexgraph/react`** ships **`NexgraphCanvas`** (see below).
 
 ---
 
-## `@kortex/core`
+## `@nexgraph/core`
 
 **Role:** Framework-agnostic **WebGL2** graph visualization and **force-directed layout** for large graphs.
 
@@ -44,14 +44,14 @@ Lower-level pieces (**`NodeRenderer`**, **`EdgeRenderer`**, **`LabelRenderer`**,
 
 ---
 
-## `@kortex/demo`
+## `@nexgraph/demo`
 
 **Role:** **Vite + TypeScript** sandbox that demonstrates **how to wire core** for interactive exploration — not a separate library.
 
 ### What it contains
 
 - **`apps/demo/src/main.ts`** — Single entry: constructs **`Renderer`**, **`ForceLayout`**, hooks **`onTick` / `onStabilized`**, loads presets / files / URLs, exports JSON, manages physics fingerprints, dataset position snapshots, **`Reset`**, debounced physics restarts seeded from load positions, graph filters, LOD toggles, optional axes grid (`graphCentroidXYZ` + **`AxesGrid.draw(..., gridOrigin)`**) etc.
-- **`apps/demo/src/demo/AxesGrid.ts`** — Reference-only grid/axes helper (**not** exported from **`@kortex/core`**): pass **`gridOrigin`** as the graph centroid if you want the floor aligned with the data while the orbit camera moves independently.
+- **`apps/demo/src/demo/AxesGrid.ts`** — Reference-only grid/axes helper (**not** exported from **`@nexgraph/core`**): pass **`gridOrigin`** as the graph centroid if you want the floor aligned with the data while the orbit camera moves independently.
 - **`apps/demo/src/demo/SettingsPanel.ts`** — HTML/CSS settings UI (not React).
 - **`apps/demo/src/demo/generateGraph*.ts`** — Synthetic graphs via worker.
 - **`apps/demo/src/demo/exportGraphJson.ts`** — Download graph + positions for round-trips.
@@ -63,38 +63,38 @@ From repo root:
 ```bash
 npm run dev
 # or
-npm run dev --workspace=@kortex/demo
+npm run dev --workspace=@nexgraph/demo
 ```
 
-Use the demo as the **canonical reference** when integrating **`@kortex/core`** into your own stack.
+Use the demo as the **canonical reference** when integrating **`@nexgraph/core`** into your own stack.
 
 ---
 
-## `@kortex/react-demo`
+## `@nexgraph/react-demo`
 
-**Role:** Small **Vite + React** app that wires **`@kortex/react`** (**`KortexCanvas`**) without touching the vanilla demo.
+**Role:** Small **Vite + React** app that wires **`@nexgraph/react`** (**`NexgraphCanvas`**) without touching the vanilla demo.
 
 ### Run
 
 ```bash
 npm run dev:react-demo
 # or
-npm run dev --workspace=@kortex/react-demo
+npm run dev --workspace=@nexgraph/react-demo
 ```
 
 Dev server defaults to port **5174** (`vite.config.ts`). Sample graph: tetrahedron (**`src/App.tsx`**).
 
 ---
 
-## `@kortex/react`
+## `@nexgraph/react`
 
-**Role:** Thin React layer over **`@kortex/core`** — lifecycle-safe **`Renderer`** mounting and declarative **`dataset`** / **`graph`** props.
+**Role:** Thin React layer over **`@nexgraph/core`** — lifecycle-safe **`Renderer`** mounting and declarative **`dataset`** / **`graph`** props.
 
 ### Current state (MVP)
 
-- **`KortexCanvas`** — Creates **`Renderer`** with `parent` set to an internal full-size `div`; **`dispose()`** on unmount. Forwards **`RendererOptions`** except **`parent`**; after mount, props stay applied (**`edgeOpacity`**, **`nodeSizeMultiplier`**, **`maxVisibleLabels`**, **`pixelRatioCap`**, **`showOverlay`**, **`lod`**). **`contextOptions`** apply only when the WebGL context is created — change them by remounting (React **`key`** on **`KortexCanvas`**). **`autoStart`** (default `true`) controls **`renderer.start()`**. Optional **`dataset`** (JSON text or object) is parsed with **`parseGraphAsync`** (`'json'`); topology-only results run **`ForceLayout`** automatically unless **`autoForceLayout`** is false. Typed buffers use **`graph`**. Imperative access via **`onReady(renderer)`**.
+- **`NexgraphCanvas`** — Creates **`Renderer`** with `parent` set to an internal full-size `div`; **`dispose()`** on unmount. Forwards **`RendererOptions`** except **`parent`**; after mount, props stay applied (**`edgeOpacity`**, **`nodeSizeMultiplier`**, **`maxVisibleLabels`**, **`pixelRatioCap`**, **`showOverlay`**, **`lod`**). **`contextOptions`** apply only when the WebGL context is created — change them by remounting (React **`key`** on **`NexgraphCanvas`**). **`autoStart`** (default `true`) controls **`renderer.start()`**. Optional **`dataset`** (JSON text or object) is parsed with **`parseGraphAsync`** (`'json'`); topology-only results run **`ForceLayout`** automatically unless **`autoForceLayout`** is false. Typed buffers use **`graph`**. Imperative access via **`onReady(renderer)`**.
 
-Build output: **`npm run build --workspace=@kortex/react`** → **`dist/`** (ESM + `.d.ts`). **`peerDependencies`**: **`react`**, **`react-dom`** (^18 / ^19).
+Build output: **`npm run build --workspace=@nexgraph/react`** → **`dist/`** (ESM + `.d.ts`). **`peerDependencies`**: **`react`**, **`react-dom`** (^18 / ^19).
 
 ### Roadmap
 
@@ -105,13 +105,13 @@ Build output: **`npm run build --workspace=@kortex/react`** → **`dist/`** (ESM
 | **`apps/react-demo`**           | Shipped minimal **Vite + React** sample — extend with **`ForceLayout`**, file load, etc., as needed |
 | **Tests**                       | **`@testing-library/react`** smoke tests                                           |
 
-Heavy logic stays in **`@kortex/core`**.
+Heavy logic stays in **`@nexgraph/core`**.
 
 ---
 
 ## How implementation in an app looks
 
-Below are two sketches: **vanilla TypeScript** (matches core’s design today) and **React** via **`@kortex/react`**.
+Below are two sketches: **vanilla TypeScript** (matches core’s design today) and **React** via **`@nexgraph/react`**.
 
 ### 1. Vanilla TypeScript / bundler of choice
 
@@ -130,7 +130,7 @@ Minimal integration steps:
 Pseudo-structure (abbreviated):
 
 ```ts
-import { Renderer, ForceLayout, parseGraphAsync } from '@kortex/core';
+import { Renderer, ForceLayout, parseGraphAsync } from '@nexgraph/core';
 
 const mount = document.getElementById('app')!;
 const renderer = new Renderer({ parent: mount });
@@ -157,10 +157,10 @@ renderer.start();
 
 Your app adds **data fetching**, **auth**, **routing**, and **UI** around this spine — mirroring **`apps/demo/src/main.ts`** for force-layout policy and LOD if you need parity.
 
-### 2. React (`@kortex/react`)
+### 2. React (`@nexgraph/react`)
 
 ```tsx
-import { KortexCanvas } from '@kortex/react';
+import { NexgraphCanvas } from '@nexgraph/react';
 
 const graphJson = {
   labels: ['a', 'b'],
@@ -170,7 +170,7 @@ const graphJson = {
 
 function GraphScene() {
   return (
-    <KortexCanvas
+    <NexgraphCanvas
       dataset={graphJson}
       onReady={(r) => r.fitToData()}
       showOverlay={false}
@@ -179,11 +179,11 @@ function GraphScene() {
 }
 ```
 
-**Alternatively**, mount **`Renderer`** yourself from **`useEffect`** (same lifecycle **`KortexCanvas`** performs internally):
+**Alternatively**, mount **`Renderer`** yourself from **`useEffect`** (same lifecycle **`NexgraphCanvas`** performs internally):
 
 ```tsx
 import { useEffect, useRef } from 'react';
-import { Renderer } from '@kortex/core';
+import { Renderer } from '@nexgraph/core';
 
 export function GraphView() {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -204,7 +204,7 @@ export function GraphView() {
 }
 ```
 
-When **`@kortex/react`** grows (narrow hooks, demos, tests), prefer **`KortexCanvas`** over duplicating mount boilerplate where props suffice.
+When **`@nexgraph/react`** grows (narrow hooks, demos, tests), prefer **`NexgraphCanvas`** over duplicating mount boilerplate where props suffice.
 
 ### 3. Practical notes
 
@@ -223,5 +223,5 @@ When **`@kortex/react`** grows (narrow hooks, demos, tests), prefer **`KortexCan
 | [TODO.md](./TODO.md)             | Active backlog                  |
 | [../AGENTS.md](../AGENTS.md)     | AI agent workflow               |
 | `packages/core/src/index.ts`     | Public exports                  |
-| **`apps/react-demo/`**           | Vite + React sample (`KortexCanvas`)      |
-| `packages/react/src/`            | **`KortexCanvas`**                                        |
+| **`apps/react-demo/`**           | Vite + React sample (`NexgraphCanvas`)      |
+| `packages/react/src/`            | **`NexgraphCanvas`**                                        |

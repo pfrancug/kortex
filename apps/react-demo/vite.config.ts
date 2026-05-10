@@ -4,14 +4,14 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['@kortex/core', '@kortex/react'],
+    exclude: ['@nexgraph/core', '@nexgraph/react'],
   },
   server: {
     port: 5174,
     open: true,
-    /** Workspace deps resolve under `node_modules/@kortex/*`; default watcher ignores `node_modules`, so edits to core/react never trigger HMR. */
+    /** Workspace deps resolve under `node_modules/@nexgraph/*`; default watcher ignores `node_modules`, so edits to core/react never trigger HMR. */
     watch: {
-      ignored: ['**/node_modules/**', '!**/node_modules/@kortex/**'],
+      ignored: ['**/node_modules/**', '!**/node_modules/@nexgraph/**'],
     },
   },
   build: {

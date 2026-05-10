@@ -8,15 +8,15 @@ When working in this repository, **follow project norms before writing code**.
 | -------- | ------------------------------------------ | ------------------------------------------------------------------------------ |
 | 1        | [docs/GUIDELINES.md](./docs/GUIDELINES.md) | Architecture rules, dependency bans, force-layout principles                   |
 | 2        | [docs/TODO.md](./docs/TODO.md)             | Single backlog — pick tasks from here                                          |
-| 3        | [docs/USAGE.md](./docs/USAGE.md)           | Package roles (`@kortex/core`, demo, `@kortex/react`) and integration patterns |
+| 3        | [docs/USAGE.md](./docs/USAGE.md)           | Package roles (`@nexgraph/core`, demo, `@nexgraph/react`) and integration patterns |
 | 4        | [docs/DONE.md](./docs/DONE.md)             | What already shipped — avoid re-planning completed milestones                  |
 
 ## Repo facts
 
-- **Monorepo:** npm workspaces — `packages/core`, `packages/react` (`KortexCanvas` MVP), `apps/demo`.
-- **Core has no React dependency.** UI belongs in **`apps/demo`**, consumer apps, or **`@kortex/react`** components.
+- **Monorepo:** npm workspaces — `packages/core`, `packages/react` (`NexgraphCanvas` MVP), `apps/demo`.
+- **Core has no React dependency.** UI belongs in **`apps/demo`**, consumer apps, or **`@nexgraph/react`** components.
 - **Rendering:** WebGL2 + TypedArrays + batched draws — see GUIDELINES “Never / Always”.
-- **Demo:** `apps/demo/src/main.ts` is the canonical vanilla wiring reference; **`apps/react-demo`** illustrates **`@kortex/react`**.
+- **Demo:** `apps/demo/src/main.ts` is the canonical vanilla wiring reference; **`apps/react-demo`** illustrates **`@nexgraph/react`**.
 
 ## Commands (verify locally)
 

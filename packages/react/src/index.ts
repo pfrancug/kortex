@@ -1,20 +1,20 @@
-/** React bindings for Kortex — GPU-first WebGL2 graph visualization. */
+/** React bindings for Nexgraph — GPU-first WebGL2 graph visualization. */
 
 export {
-  KortexCanvas,
-  type KortexCanvasProps,
-  type KortexCanvasHandle,
-  type KortexCanvasGraphProps,
-  type KortexCanvasDataset,
-  type KortexRgb,
-  type KortexNodeColorContext,
-  type KortexNodeClickContext,
-  type KortexNodeColorFn,
-  type KortexEdgeColorContext,
-  type KortexEdgeColorFn,
+  NexgraphCanvas,
+  type NexgraphCanvasProps,
+  type NexgraphCanvasHandle,
+  type NexgraphCanvasGraphProps,
+  type NexgraphCanvasDataset,
+  type NexgraphRgb,
+  type NexgraphNodeColorContext,
+  type NexgraphNodeClickContext,
+  type NexgraphNodeColorFn,
+  type NexgraphEdgeColorContext,
+  type NexgraphEdgeColorFn,
   clampOrbitDistance,
   DEFAULT_AUTO_ROTATE_SPEED,
-} from './KortexCanvas';
+} from './NexgraphCanvas';
 export type {
   ParseResult,
   ForceLayoutPresetId,
@@ -22,4 +22,4 @@ export type {
   GraphJsonNode,
   GraphJsonEdge,
   BackgroundColor,
-} from '@kortex/core';
+} from '@nexgraph/core';

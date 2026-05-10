@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 import {
-  KortexCanvas,
-  KortexCanvasDataset,
-  KortexCanvasHandle,
-} from '@kortex/react';
+  NexgraphCanvas,
+  NexgraphCanvasDataset,
+  NexgraphCanvasHandle,
+} from '@nexgraph/react';
 
 /** Demo graph: topology-only JSON (canvas runs force layout automatically). */
-const DEMO_DATASET: KortexCanvasDataset = {
+const DEMO_DATASET: NexgraphCanvasDataset = {
   nodeCount: 4,
   labels: ['A', 'B', 'C', 'D'],
   edges: [
@@ -20,7 +20,7 @@ const DEMO_DATASET: KortexCanvasDataset = {
 };
 
 export function App(): ReactElement {
-  const ref = useRef<KortexCanvasHandle>(null);
+  const ref = useRef<NexgraphCanvasHandle>(null);
 
   const [zoomDistance, setZoomDistance] = useState(50);
 
@@ -39,11 +39,11 @@ export function App(): ReactElement {
         ref.current.setZoomDistance(zoomDistance);
       }
     }, timeout);
-  }, [ref.current]);
+  }, []);
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <KortexCanvas
+      <NexgraphCanvas
         ref={ref}
         contextOptions={{
           antialias: true,
@@ -69,7 +69,7 @@ export function App(): ReactElement {
         enableNavigationControls={true}
       />
       <div className='hint'>
-        React + @kortex/react — drag = orbit | shift+drag / right-drag = pan |
+        React + @nexgraph/react — drag = orbit | shift+drag / right-drag = pan |
         wheel = zoom
       </div>
     </div>

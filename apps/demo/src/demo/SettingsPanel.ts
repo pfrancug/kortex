@@ -6,7 +6,7 @@ import type {
   IntegrationMode,
   LinkAttractionMode,
   Renderer,
-} from '@kortex/core';
+} from '@nexgraph/core';
 
 // ── Styles ──────────────────────────────────────────────────────────
 
@@ -554,7 +554,7 @@ export class SettingsPanel {
     this.phyLinkSelect = el('select', 'kx-select') as HTMLSelectElement;
     for (const opt of [
       { v: 'd3_like', t: 'd3-like' },
-      { v: 'kortex_custom', t: 'position-only (legacy)' },
+      { v: 'nexgraph_custom', t: 'position-only (legacy)' },
     ] as const) {
       const o = document.createElement('option');
       o.value = opt.v;

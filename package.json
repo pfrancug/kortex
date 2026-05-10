@@ -1,5 +1,5 @@
 {
-  "name": "kortex",
+  "name": "nexgraph",
   "version": "0.0.1",
   "private": true,
   "license": "MIT",
@@ -9,11 +9,11 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=@kortex/demo",
-    "dev:demo": "npm run dev --workspace=@kortex/demo",
-    "dev:react-demo": "npm run dev --workspace=@kortex/react-demo",
+    "dev": "npm run dev --workspace=@nexgraph/demo",
+    "dev:demo": "npm run dev --workspace=@nexgraph/demo",
+    "dev:react-demo": "npm run dev --workspace=@nexgraph/react-demo",
     "build": "npm run build --workspaces --if-present",
-    "build:core": "npm run build --workspace=@kortex/core",
+    "build:core": "npm run build --workspace=@nexgraph/core",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",

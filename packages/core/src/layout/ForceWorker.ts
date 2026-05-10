@@ -7,21 +7,21 @@
  * **Extended parameters** (`forceScaleMode`, `linkAttractionMode`, `integrationMode`, …) live on
  * {@link ForceConfig}. Edge weights: `edgeWeights` buffer + {@link ForceConfig.edgeWeightInfluence}
  * (see `docs/GUIDELINES.md` — force layout). **`linkAttractionMode`** selects spring math inside one
- * shared link loop (legacy **`kortex_custom`** remains for stability preset).
+ * shared link loop (legacy **`nexgraph_custom`** remains for stability preset).
  */
 
 import { buildPerEdgeLinkPhysics } from './edgeWeightFactors';
 
-// ── Physics mode types (exported for `@kortex/core` consumers) ───────
+// ── Physics mode types (exported for `@nexgraph/core` consumers) ───────
 
 /** Whether nominal `chargeStrength` / `linkDistance` are auto-rescaled from graph size. */
 export type ForceScaleMode = 'none' | 'auto';
 
 /**
  * Link spring formulation. **`d3_like`** matches d3-force-3d link velocity semantics;
- * **`kortex_custom`** uses position-only deltas (legacy stability path).
+ * **`nexgraph_custom`** uses position-only deltas (legacy stability path).
  */
-export type LinkAttractionMode = 'd3_like' | 'kortex_custom';
+export type LinkAttractionMode = 'd3_like' | 'nexgraph_custom';
 
 /** Velocity update order and steps. **`standard`** = link forces → charge → center → decay → integrate (d3 simulation tick order). */
 export type IntegrationMode = 'standard' | 'legacy';
@@ -154,7 +154,7 @@ export type ForceResponse = ForceTickResult | ForceStabilizedResult;
 /**
  * Product defaults match **`interoperability`**: nominal charge/link distance (`forceScaleMode: 'none'`),
  * **`d3_like`** links, **`standard`** integration (link → charge → center).
- * {@link createForceConfigPreset} with **`'stability'`** restores auto scaling + **`kortex_custom`** links +
+ * {@link createForceConfigPreset} with **`'stability'`** restores auto scaling + **`nexgraph_custom`** links +
  * **`legacy`** tick order (still supported via {@link ForceConfig.linkAttractionMode} /
  * {@link ForceConfig.integrationMode}).
  *
@@ -556,7 +556,7 @@ function applyCenterForce(
 
 /**
  * One link-force sweep per iteration: **`d3Like`** uses position+velocity separation (d3-force-3d);
- * **`false`** uses position-only deltas ({@link LinkAttractionMode} **`kortex_custom`**).
+ * **`false`** uses position-only deltas ({@link LinkAttractionMode} **`nexgraph_custom`**).
  */
 function applyLinkPassesSinglePass(
   d3Like: boolean,

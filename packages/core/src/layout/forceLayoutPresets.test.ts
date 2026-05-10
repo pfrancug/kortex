@@ -18,7 +18,7 @@ describe('createForceConfigPreset', () => {
   it('stability bundle matches roadmap knobs', () => {
     expect(createForceConfigPreset('stability')).toEqual({
       forceScaleMode: 'auto',
-      linkAttractionMode: 'kortex_custom',
+      linkAttractionMode: 'nexgraph_custom',
       integrationMode: 'legacy',
       recenterOnFinish: false,
       edgeWeightInfluence: 'off',

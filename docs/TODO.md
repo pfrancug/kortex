@@ -1,4 +1,4 @@
-# Kortex — todo & backlog
+# Nexgraph — todo & backlog
 
 **Single active backlog** for the repo. Norms and rules → **[GUIDELINES.md](./GUIDELINES.md)** · Integration → **[USAGE.md](./USAGE.md)** · Shipped work → **[DONE.md](./DONE.md)** · **AI agents** → **[../AGENTS.md](../AGENTS.md)** · Overview → **[../README.md](../README.md)**
 
@@ -10,7 +10,7 @@
 
 - [ ] **`maxVisibleLabels`** — prioritize largest nodes (by stored radius) when choosing which labels to build, before chunk/instance caps (closest-to-camera label bias deferred).
 - [ ] **Stable layout across graph refetch** — preserve world positions for unchanged node ids when merging new API data + continuing layout (same id → keep prior world position).
-- [ ] **Rich label visibility** — core handles caps + geometric ranking (e.g. largest nodes, nearest-to-camera fill, refresh when the camera moves). Search hits, selection, and neighbor highlighting stay **app-defined**: pass ids / masks into Kortex (e.g. always-render-this-set within budget) rather than baking query/UI semantics into the renderer.
+- [ ] **Rich label visibility** — core handles caps + geometric ranking (e.g. largest nodes, nearest-to-camera fill, refresh when the camera moves). Search hits, selection, and neighbor highlighting stay **app-defined**: pass ids / masks into Nexgraph (e.g. always-render-this-set within budget) rather than baking query/UI semantics into the renderer.
 
 ### Interaction
 
@@ -31,9 +31,9 @@ Existing partial suites: `GraphStore`, `LODController`, `ClusterLOD`, `ChunkInde
 
 ---
 
-## Post-MVP — `@kortex/react` (Phase 12 follow-ups)
+## Post-MVP — `@nexgraph/react` (Phase 12 follow-ups)
 
-MVP shipped → **[DONE.md](./DONE.md)** (**`KortexCanvas`**, **`dist/`** build).
+MVP shipped → **[DONE.md](./DONE.md)** (**`NexgraphCanvas`**, **`dist/`** build).
 
 - [ ] **`useCamera`**, **`usePicking`** hooks (or narrowed API)
 - [ ] Tests with **`@testing-library/react`**
@@ -80,7 +80,7 @@ MVP shipped → **[DONE.md](./DONE.md)** (**`KortexCanvas`**, **`dist/`** build)
 
 _(Design decisions — resolve during tuning / dogfooding.)_
 
-1. Should **`interoperability`** preset also tune **`alphaMin`** / iteration cap for “export snapshot” parity vs stricter Kortex convergence?
+1. Should **`interoperability`** preset also tune **`alphaMin`** / iteration cap for “export snapshot” parity vs stricter Nexgraph convergence?
 2. **`edgeWeightInfluence`** curves: strength **`∝ w^0.5`**, distance **`∝ w^-0.5`** (`EDGE_WEIGHT_EXPONENT`) — revisit if profiling disagrees.
 3. **`maxVelocity`** default under **`standard`** integration after link-force changes — may need retuning.
 
@@ -91,7 +91,7 @@ _(Design decisions — resolve during tuning / dogfooding.)_
 | Order | Track                         | Notes                                         |
 | ----- | ----------------------------- | --------------------------------------------- |
 | 1     | Tests (labels + force worker) | Protect regressions before large refactors    |
-| 2     | `@kortex/react` follow-ups    | **`useCamera`** / **`usePicking`**, RTL tests |
+| 2     | `@nexgraph/react` follow-ups    | **`useCamera`** / **`usePicking`**, RTL tests |
 | 3     | Analytics                     | Builds on existing filter/sizing math         |
 | 4     | Bundling / WebGPU / WASM / VR | Heavy architecture lifts                      |
 
@@ -99,4 +99,4 @@ _(Design decisions — resolve during tuning / dogfooding.)_
 
 ## Completed milestones
 
-Active backlog items live above. Shipped work (including **`@kortex/react`** MVP) → **[DONE.md](./DONE.md)**.
+Active backlog items live above. Shipped work (including **`@nexgraph/react`** MVP) → **[DONE.md](./DONE.md)**.
