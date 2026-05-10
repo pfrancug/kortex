@@ -46,6 +46,11 @@ export interface KortexCanvasHandle {
   /** Sets orbit distance from target (preserves azimuth / elevation). */
   setZoomDistance: (distance: number) => void;
   getZoomDistance: () => number;
+  /**
+   * Live node position buffer from the renderer (**`nodeCount × 3`** floats, xyz…).
+   * Do not mutate; **`null`** before mount / after dispose.
+   */
+  getGraphPositions: () => Float32Array | null;
 }
 
 const MIN_ORBIT_DISTANCE = 0.5;
@@ -186,6 +191,11 @@ export type KortexCanvasGraphProps = {
   labels?: string[];
   edges: Uint32Array;
   edgeColors?: Uint8Array;
+  /**
+   * Per-edge scalar weights (**length ≥ edge pair count**) for {@link ForceLayout}
+   * when **`graphForceLayout`** is enabled (same order as **`edges`** pairs).
+   */
+  edgeWeights?: Float32Array;
 };
 
 export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
@@ -231,6 +241,19 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
    * Ignored while **`dataset`** is set.
    */
   graph?: KortexCanvasGraphProps | null;
+  /**
+   * When **`true`** and **`graph`** is applied with at least one edge, run {@link ForceLayout}
+   * after upload (same worker path as topology-only **`dataset`** loads).
+   * Ignored while **`dataset`** is set.
+   * @defaultValue false
+   */
+  graphForceLayout?: boolean;
+  /**
+   * Called after each physics tick / stabilize while **`graphForceLayout`** is driving layout
+   * (after positions are written to the GPU store). Optional — use to snapshot **`positions`**
+   * for persistence across **`graph`** updates.
+   */
+  onGraphLayoutTick?: (positions: Float32Array) => void;
   /**
    * After applying **`dataset`** or **`graph`**, call {@link Renderer.fitToData}.
    * @defaultValue true when **`dataset`** or **`graph`** is set.
@@ -319,6 +342,7 @@ export type KortexCanvasProps = Omit<RendererOptions, 'parent'> & {
  * Pass **`dataset`** as JSON **text** (e.g. `.json` file contents) or a **serializable graph object**
  * ({@link parseGraphAsync}, JSON only). For typed GPU buffers, use **`graph`** instead (ignored while **`dataset`** is set).
  * Topology-only JSON yields **`layoutSuggested`** — {@link ForceLayout} starts automatically unless **`autoForceLayout`** is false.
+ * With **`graph`** only, set **`graphForceLayout`** to run the same simulation after buffer upload (optional **`graph.edgeWeights`**).
  * Use **`onReady`** when you need the {@link Renderer} instance (picking, custom loops, etc.).
  * Optional **`nodeColors`** / **`nodeColor`** / **`nodeColorData`** / **`nodeColorRevision`** drive per-node tint after load; **`edgeColors`** / **`linkColor`** / **`edgeColorData`** / **`edgeColorRevision`** do the same for edges (callbacks mirror ForceGraph **`nodeColor`** / **`linkColor`**). Transparency uses **`nodeOpacity`** / **`edgeOpacity`** (global).
  */
@@ -330,6 +354,8 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
     autoStart = true,
     onReady,
     graph,
+    graphForceLayout = false,
+    onGraphLayoutTick,
     fitGraph,
     dataset,
     onDatasetLoaded,
@@ -375,6 +401,9 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
 
   const onNodeClickRef = useRef(onNodeClick);
   onNodeClickRef.current = onNodeClick;
+
+  const onGraphLayoutTickRef = useRef(onGraphLayoutTick);
+  onGraphLayoutTickRef.current = onGraphLayoutTick;
 
   const [hoverTip, setHoverTip] = useState<{
     text: string;
@@ -432,9 +461,11 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
 
     forceLayout.onTick = (positions) => {
       r.graph.updatePositions(positions);
+      onGraphLayoutTickRef.current?.(positions);
     };
     forceLayout.onStabilized = (positions) => {
       r.graph.updatePositions(positions);
+      onGraphLayoutTickRef.current?.(positions);
       // Do not call fitToData here — auto force layout must not move zoom / orbit target.
     };
 
@@ -520,6 +551,7 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
         r.camera.state.distance = clampOrbitDistance(distance);
       },
       getZoomDistance: () => rendererRef.current?.camera.state.distance ?? 0,
+      getGraphPositions: () => rendererRef.current?.graph.positions ?? null,
     }),
     [],
   );
@@ -579,7 +611,10 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
 
   useEffect(() => {
     if (!renderer || datasetPayload !== null) return;
-    if (graph === undefined || graph === null) return;
+    if (graph === undefined || graph === null) {
+      forceLayoutRef.current?.stop();
+      return;
+    }
     forceLayoutRef.current?.stop();
     const g = graph;
     renderer.graph.setNodes(g.positions, g.colors, g.sizes, g.labels);
@@ -597,6 +632,26 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
       edgeColorDataRef.current,
     );
     if (shouldFitAfterLoad) renderer.fitToData();
+
+    const runGraphPhysics =
+      graphForceLayout &&
+      renderer.graph.edgeCount > 0 &&
+      renderer.graph.nodeCount > 0;
+    if (runGraphPhysics) {
+      const weights =
+        g.edgeWeights && g.edgeWeights.length >= renderer.graph.edgeCount
+          ? g.edgeWeights
+          : undefined;
+      const preset = layoutOptsRef.current.preset;
+      forceLayoutRef.current?.start(
+        renderer.graph.positions,
+        renderer.graph.edgeIndices,
+        renderer.graph.nodeCount,
+        renderer.graph.edgeCount,
+        createForceConfigPreset(preset),
+        weights,
+      );
+    }
   }, [
     renderer,
     datasetPayload,
@@ -606,6 +661,9 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
     graph?.sizes,
     graph?.labels,
     graph?.edgeColors,
+    graph?.edgeWeights,
+    graphForceLayout,
+    forceLayoutPreset,
     fitGraph,
   ]);
 
@@ -613,7 +671,6 @@ export const KortexCanvas = forwardRef<KortexCanvasHandle, KortexCanvasProps>(
     if (!renderer) return;
 
     if (datasetPayload === null) {
-      forceLayoutRef.current?.stop();
       return;
     }
 

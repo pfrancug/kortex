@@ -83,12 +83,12 @@ _(Design decisions — resolve during tuning / dogfooding.)_
 
 ## Priority hint (impact × sequencing)
 
-| Order | Track                         | Notes                                      |
-| ----- | ----------------------------- | ------------------------------------------ |
-| 1     | Tests (labels + force worker) | Protect regressions before large refactors |
+| Order | Track                         | Notes                                         |
+| ----- | ----------------------------- | --------------------------------------------- |
+| 1     | Tests (labels + force worker) | Protect regressions before large refactors    |
 | 2     | `@kortex/react` follow-ups    | **`useCamera`** / **`usePicking`**, RTL tests |
-| 3     | Analytics                     | Builds on existing filter/sizing math      |
-| 4     | Bundling / WebGPU / WASM / VR | Heavy architecture lifts                   |
+| 3     | Analytics                     | Builds on existing filter/sizing math         |
+| 4     | Bundling / WebGPU / WASM / VR | Heavy architecture lifts                      |
 
 ---
 
