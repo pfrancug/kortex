@@ -9,7 +9,12 @@
 ### Labels & layout UX
 
 - [ ] **`maxVisibleLabels`** — prioritize largest nodes (by stored radius) when choosing which labels to build, before chunk/instance caps (closest-to-camera label bias deferred).
-- [ ] **Stable layout across graph refetch** — preserve world positions for unchanged node ids when merging new API data (like joiner `nodesByIdRef` + ForceGraph simulation continuity).
+- [ ] **Stable layout across graph refetch** — preserve world positions for unchanged node ids when merging new API data + continuing layout (same id → keep prior world position).
+- [ ] **Rich label visibility** — core handles caps + geometric ranking (e.g. largest nodes, nearest-to-camera fill, refresh when the camera moves). Search hits, selection, and neighbor highlighting stay **app-defined**: pass ids / masks into Kortex (e.g. always-render-this-set within budget) rather than baking query/UI semantics into the renderer.
+
+### Interaction
+
+- [ ] **Node drag** — pointer-drag on billboards updates layout positions; support **persist placement** (stay where dropped) vs **release-to-origin / snap-back** (and how it interacts with **`ForceLayout`** / pinned nodes).
 
 ### Labels (GPU / tests)
 
