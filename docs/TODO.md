@@ -91,7 +91,7 @@ _(Design decisions — resolve during tuning / dogfooding.)_
 | Order | Track                         | Notes                                         |
 | ----- | ----------------------------- | --------------------------------------------- |
 | 1     | Tests (labels + force worker) | Protect regressions before large refactors    |
-| 2     | `@nexgraph/react` follow-ups    | **`useCamera`** / **`usePicking`**, RTL tests |
+| 2     | `@nexgraph/react` follow-ups  | **`useCamera`** / **`usePicking`**, RTL tests |
 | 3     | Analytics                     | Builds on existing filter/sizing math         |
 | 4     | Bundling / WebGPU / WASM / VR | Heavy architecture lifts                      |
 

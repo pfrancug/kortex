@@ -92,7 +92,10 @@ export type {
 export { NodeRenderer } from './renderer/NodeRenderer';
 export { EdgeRenderer } from './renderer/EdgeRenderer';
 export { PickRenderer } from './renderer/PickRenderer';
-export { LabelRenderer, LABEL_MAX_NODES_PER_BUILD } from './renderer/LabelRenderer';
+export {
+  LabelRenderer,
+  LABEL_MAX_NODES_PER_BUILD,
+} from './renderer/LabelRenderer';
 export { createSdfAtlas, measureText } from './renderer/SdfAtlas';
 export type { SdfAtlasData, GlyphMetrics } from './renderer/SdfAtlas';
 export { FrustumCuller } from './renderer/FrustumCuller';

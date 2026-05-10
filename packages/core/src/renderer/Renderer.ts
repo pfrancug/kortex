@@ -460,9 +460,7 @@ export class Renderer {
           this.camera,
           this.height,
           this.picking.hoveredNode ?? -1,
-          this.selectionHighlight
-            ? (this.picking.selectedNode ?? -1)
-            : -1,
+          this.selectionHighlight ? (this.picking.selectedNode ?? -1) : -1,
           nodeMul,
           clampNodeOpacity(this.nodeOpacity),
         );

@@ -59,17 +59,16 @@ const MAX_ORBIT_DISTANCE = 50_000_000;
 /** Match {@link OrbitControls} default clamp range. */
 export function clampOrbitDistance(distance: number): number {
   if (!Number.isFinite(distance)) return MIN_ORBIT_DISTANCE;
-  return Math.min(
-    MAX_ORBIT_DISTANCE,
-    Math.max(MIN_ORBIT_DISTANCE, distance),
-  );
+  return Math.min(MAX_ORBIT_DISTANCE, Math.max(MIN_ORBIT_DISTANCE, distance));
 }
 
 /** Default auto-rotate angular speed (rad/s), ~4.6°/s. */
 export const DEFAULT_AUTO_ROTATE_SPEED = 0.08;
 
 /** Per-node tint callback; closure can carry selection / search state like **`react-force-graph`** **`nodeColor`**. */
-export type NexgraphNodeColorFn = (ctx: NexgraphNodeColorContext) => NexgraphRgb;
+export type NexgraphNodeColorFn = (
+  ctx: NexgraphNodeColorContext,
+) => NexgraphRgb;
 
 /** Context for {@link NexgraphEdgeColorFn} (aligned with ForceGraph **`linkColor`**). */
 export type NexgraphEdgeColorContext = {
@@ -81,7 +80,9 @@ export type NexgraphEdgeColorContext = {
 };
 
 /** Per-edge tint callback; closure can carry selection / match state like **`linkColor`**. */
-export type NexgraphEdgeColorFn = (ctx: NexgraphEdgeColorContext) => NexgraphRgb;
+export type NexgraphEdgeColorFn = (
+  ctx: NexgraphEdgeColorContext,
+) => NexgraphRgb;
 
 function applyNexgraphNodeColors(
   graph: GraphStore,
@@ -346,8 +347,10 @@ export type NexgraphCanvasProps = Omit<RendererOptions, 'parent'> & {
  * Use **`onReady`** when you need the {@link Renderer} instance (picking, custom loops, etc.).
  * Optional **`nodeColors`** / **`nodeColor`** / **`nodeColorData`** / **`nodeColorRevision`** drive per-node tint after load; **`edgeColors`** / **`linkColor`** / **`edgeColorData`** / **`edgeColorRevision`** do the same for edges (callbacks mirror ForceGraph **`nodeColor`** / **`linkColor`**). Transparency uses **`nodeOpacity`** / **`edgeOpacity`** (global).
  */
-export const NexgraphCanvas = forwardRef<NexgraphCanvasHandle, NexgraphCanvasProps>(
-  function NexgraphCanvas(props, ref): ReactElement {
+export const NexgraphCanvas = forwardRef<
+  NexgraphCanvasHandle,
+  NexgraphCanvasProps
+>(function NexgraphCanvas(props, ref): ReactElement {
   const {
     className,
     style,
@@ -707,8 +710,7 @@ export const NexgraphCanvas = forwardRef<NexgraphCanvasHandle, NexgraphCanvasPro
 
         if (runAutoLayout) {
           const weights =
-            result.edgeWeights &&
-            result.edgeWeights.length >= result.edgeCount
+            result.edgeWeights && result.edgeWeights.length >= result.edgeCount
               ? result.edgeWeights
               : undefined;
           forceLayoutRef.current?.start(

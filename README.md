@@ -11,7 +11,7 @@ This repository is a **workspace monorepo**:
 | **`@nexgraph/react-demo`** | **Vite + React** sample using **`NexgraphCanvas`** (`npm run dev:react-demo`).                                                 |
 | **`@nexgraph/react`**      | **`NexgraphCanvas`** — thin lifecycle bindings over **`@nexgraph/core`** (build: `npm run build --workspace=@nexgraph/react`). |
 
-**Integration:** [docs/USAGE.md](./docs/USAGE.md) · **Guidelines:** [docs/GUIDELINES.md](./docs/GUIDELINES.md) · **Backlog:** [docs/TODO.md](./docs/TODO.md) · **Shipped:** [docs/DONE.md](./docs/DONE.md) · **AI agents:** [AGENTS.md](./AGENTS.md)
+**Integration:** [docs/USAGE.md](./docs/USAGE.md) · **npm publish:** [docs/PUBLISH.md](./docs/PUBLISH.md) · **Guidelines:** [docs/GUIDELINES.md](./docs/GUIDELINES.md) · **Backlog:** [docs/TODO.md](./docs/TODO.md) · **Shipped:** [docs/DONE.md](./docs/DONE.md) · **AI agents:** [AGENTS.md](./AGENTS.md)
 
 ## Run the demo
 

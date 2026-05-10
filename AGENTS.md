@@ -4,12 +4,13 @@ When working in this repository, **follow project norms before writing code**.
 
 ## Read first
 
-| Priority | Document                                   | Why                                                                            |
-| -------- | ------------------------------------------ | ------------------------------------------------------------------------------ |
-| 1        | [docs/GUIDELINES.md](./docs/GUIDELINES.md) | Architecture rules, dependency bans, force-layout principles                   |
-| 2        | [docs/TODO.md](./docs/TODO.md)             | Single backlog — pick tasks from here                                          |
+| Priority | Document                                   | Why                                                                                |
+| -------- | ------------------------------------------ | ---------------------------------------------------------------------------------- |
+| 1        | [docs/GUIDELINES.md](./docs/GUIDELINES.md) | Architecture rules, dependency bans, force-layout principles                       |
+| 2        | [docs/TODO.md](./docs/TODO.md)             | Single backlog — pick tasks from here                                              |
 | 3        | [docs/USAGE.md](./docs/USAGE.md)           | Package roles (`@nexgraph/core`, demo, `@nexgraph/react`) and integration patterns |
-| 4        | [docs/DONE.md](./docs/DONE.md)             | What already shipped — avoid re-planning completed milestones                  |
+| 4        | [docs/PUBLISH.md](./docs/PUBLISH.md)       | Publishing scoped packages to npm (`@nexgraph` org)                                |
+| 5        | [docs/DONE.md](./docs/DONE.md)             | What already shipped — avoid re-planning completed milestones                      |
 
 ## Repo facts
 

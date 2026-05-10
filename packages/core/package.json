@@ -1,37 +1,40 @@
 {
   "name": "@nexgraph/core",
   "version": "0.1.0",
-  "private": false,
+  "description": "GPU-first WebGL2 graph visualization engine (renderer, layout, parsers)",
+  "keywords": [
+    "webgl",
+    "webgl2",
+    "graph",
+    "visualization",
+    "force-directed",
+    "layout",
+    "gpu"
+  ],
   "license": "MIT",
-  "type": "module",
   "sideEffects": false,
+  "type": "module",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
-  "publishConfig": {
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
-      }
-    }
-  },
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "src",
-    "LICENSE"
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "clean": "rimraf dist",
     "dev": "tsc -p tsconfig.build.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "prepublishOnly": "npm run clean && npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "ts": "tsc --noEmit"
@@ -41,6 +44,10 @@
     "eslint": "10.3.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.59.2",
-    "vitest": "^4.1.5"
+    "vitest": "4.1.5"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

@@ -20,12 +20,9 @@ function bytePair01(pair: string): number | null {
 }
 
 /** Parse **`#RGB`**, **`#RRGGBB`**, **`#RRGGBBAA`** → linear RGBA. Returns **`null`** if invalid. */
-export function parseCssHexBackground(s: string): readonly [
-  number,
-  number,
-  number,
-  number,
-] | null {
+export function parseCssHexBackground(
+  s: string,
+): readonly [number, number, number, number] | null {
   const t = s.trim();
   if (!t.startsWith('#')) return null;
   const hex = t.slice(1);

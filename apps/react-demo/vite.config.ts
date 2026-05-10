@@ -1,8 +1,21 @@
+import path from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@nexgraph/core': path.resolve(
+        __dirname,
+        '../../packages/core/src/index.ts',
+      ),
+      '@nexgraph/react': path.resolve(
+        __dirname,
+        '../../packages/react/src/index.ts',
+      ),
+    },
+  },
   optimizeDeps: {
     exclude: ['@nexgraph/core', '@nexgraph/react'],
   },

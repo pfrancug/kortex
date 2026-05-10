@@ -126,13 +126,7 @@ function worldSphereRadius(
   index: number,
   proj11: number,
 ): number {
-  const {
-    view,
-    positions,
-    visibility,
-    viewportHeight,
-    minScreenSize,
-  } = params;
+  const { view, positions, visibility, viewportHeight, minScreenSize } = params;
   if (visibility[index] === 0) return -1;
 
   const scale = 1.0;

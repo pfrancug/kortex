@@ -98,12 +98,12 @@ Build output: **`npm run build --workspace=@nexgraph/react`** → **`dist/`** (E
 
 ### Roadmap
 
-| Piece                           | Purpose                                                                            |
-| ------------------------------- | ---------------------------------------------------------------------------------- |
-| **`useCamera`** / **`usePicking`** | Narrow hooks around **`renderer.camera`** / **`renderer.picking`**              |
-| **`useForceLayout`**            | Wrap **`ForceLayout`**: start/stop from effects; expose running state + callbacks. |
-| **`apps/react-demo`**           | Shipped minimal **Vite + React** sample — extend with **`ForceLayout`**, file load, etc., as needed |
-| **Tests**                       | **`@testing-library/react`** smoke tests                                           |
+| Piece                              | Purpose                                                                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **`useCamera`** / **`usePicking`** | Narrow hooks around **`renderer.camera`** / **`renderer.picking`**                                  |
+| **`useForceLayout`**               | Wrap **`ForceLayout`**: start/stop from effects; expose running state + callbacks.                  |
+| **`apps/react-demo`**              | Shipped minimal **Vite + React** sample — extend with **`ForceLayout`**, file load, etc., as needed |
+| **Tests**                          | **`@testing-library/react`** smoke tests                                                            |
 
 Heavy logic stays in **`@nexgraph/core`**.
 
@@ -216,12 +216,12 @@ When **`@nexgraph/react`** grows (narrow hooks, demos, tests), prefer **`Nexgrap
 
 ## Related docs
 
-| Doc                              | Role                            |
-| -------------------------------- | ------------------------------- |
-| [GUIDELINES.md](./GUIDELINES.md) | Architecture & dependency rules |
-| [DONE.md](./DONE.md)             | Completed milestones            |
-| [TODO.md](./TODO.md)             | Active backlog                  |
-| [../AGENTS.md](../AGENTS.md)     | AI agent workflow               |
-| `packages/core/src/index.ts`     | Public exports                  |
-| **`apps/react-demo/`**           | Vite + React sample (`NexgraphCanvas`)      |
-| `packages/react/src/`            | **`NexgraphCanvas`**                                        |
+| Doc                              | Role                                   |
+| -------------------------------- | -------------------------------------- |
+| [GUIDELINES.md](./GUIDELINES.md) | Architecture & dependency rules        |
+| [DONE.md](./DONE.md)             | Completed milestones                   |
+| [TODO.md](./TODO.md)             | Active backlog                         |
+| [../AGENTS.md](../AGENTS.md)     | AI agent workflow                      |
+| `packages/core/src/index.ts`     | Public exports                         |
+| **`apps/react-demo/`**           | Vite + React sample (`NexgraphCanvas`) |
+| `packages/react/src/`            | **`NexgraphCanvas`**                   |

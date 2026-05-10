@@ -67,10 +67,10 @@ repo/
 
 ### `apps/react-demo`
 
-| Area    | Choice                          |
-| ------- | ------------------------------- |
+| Area    | Choice                            |
+| ------- | --------------------------------- |
 | UI      | **React** + **`@nexgraph/react`** |
-| Bundler | Vite (`@vitejs/plugin-react`)   |
+| Bundler | Vite (`@vitejs/plugin-react`)     |
 
 ---
 
@@ -159,11 +159,11 @@ See **`FORCE_LAYOUT_DEFAULTS`**, **`createForceConfigPreset`**, and **`ForceWork
 
 ## Documentation map
 
-| Document                         | Role                                    |
-| -------------------------------- | --------------------------------------- |
+| Document                         | Role                                      |
+| -------------------------------- | ----------------------------------------- |
 | [README.md](../README.md)        | Repo entry: what Nexgraph is, run demo    |
 | [USAGE.md](./USAGE.md)           | Packages & embedding **`@nexgraph/core`** |
-| [GUIDELINES.md](./GUIDELINES.md) | This file — engineering norms           |
-| [DONE.md](./DONE.md)             | Completed milestones                    |
-| [TODO.md](./TODO.md)             | Single active backlog                   |
-| [../AGENTS.md](../AGENTS.md)     | AI agent instructions                   |
+| [GUIDELINES.md](./GUIDELINES.md) | This file — engineering norms             |
+| [DONE.md](./DONE.md)             | Completed milestones                      |
+| [TODO.md](./TODO.md)             | Single active backlog                     |
+| [../AGENTS.md](../AGENTS.md)     | AI agent instructions                     |

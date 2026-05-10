@@ -102,6 +102,6 @@ Partial suites today: **`GraphStore`**, **`LODController`**, **`ClusterLOD`**, *
 | Doc                              | Purpose                         |
 | -------------------------------- | ------------------------------- |
 | [GUIDELINES.md](./GUIDELINES.md) | Architecture & dependency rules |
-| [USAGE.md](./USAGE.md)           | Embedding **`@nexgraph/core`**    |
+| [USAGE.md](./USAGE.md)           | Embedding **`@nexgraph/core`**  |
 | [TODO.md](./TODO.md)             | Open tasks                      |
 | [../AGENTS.md](../AGENTS.md)     | Agent workflow                  |
