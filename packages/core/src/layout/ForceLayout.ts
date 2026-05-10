@@ -66,7 +66,7 @@ export class ForceLayout {
   ): void {
     this.stop();
 
-    this.worker = new Worker(new URL('./ForceWorker.ts', import.meta.url), {
+    this.worker = new Worker(new URL('./ForceWorker.js', import.meta.url), {
       type: 'module',
     });
 

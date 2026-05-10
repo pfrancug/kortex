@@ -17,9 +17,7 @@ import type {
  * if (result.layoutSuggested) startForceLayout(result);
  * ```
  *
- * The caller must supply `workerUrl` — typically the output of:
- *   `new URL('./GraphParseWorker.ts', import.meta.url)`
- * bundled by Vite/esbuild as a worker asset.
+ * Optional `workerUrl`; default is `./GraphParseWorker.js` beside this module (`dist/` on npm).
  */
 export function parseGraphAsync(
   type: ParseRequest['type'],
@@ -27,7 +25,7 @@ export function parseGraphAsync(
   workerUrl?: URL,
 ): Promise<ParseResult> {
   return new Promise((resolve, reject) => {
-    const url = workerUrl ?? new URL('./GraphParseWorker.ts', import.meta.url);
+    const url = workerUrl ?? new URL('./GraphParseWorker.js', import.meta.url);
 
     const worker = new Worker(url, { type: 'module' });
 
