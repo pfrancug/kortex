@@ -62,9 +62,9 @@ function fallbackNodeLabels(nodeCount: number): string[] {
 }
 
 function resolveLabelsFromGraph(
-  graph: JSONGraph,
+  graph: GraphJsonDocument,
   nodeCount: number,
-  nodes: JSONNode[] | undefined,
+  nodes: GraphJsonNode[] | undefined,
 ): string[] {
   const fromTop = normalizeLabels(graph.labels, nodeCount);
   if (fromTop?.some((s) => s.length > 0)) return fromTop;
@@ -82,7 +82,7 @@ function resolveLabelsFromGraph(
 }
 
 /** Flatten JSON edges to indices + weights (invalid endpoints skipped). */
-function flattenJSONEdges(edges: JSONEdge[]): {
+function flattenJSONEdges(edges: GraphJsonEdge[]): {
   edgeIndices: Uint32Array;
   edgeWeights: Float32Array;
   edgeCount: number;
@@ -194,22 +194,23 @@ function parseCSV(csv: string): ParseResult {
   throw new Error('CSV must have x,y[,z] columns or source,target columns');
 }
 
-interface JSONNode {
+export interface GraphJsonNode {
   x: number;
   y: number;
   z?: number;
   label?: string;
 }
 
-interface JSONEdge {
+export interface GraphJsonEdge {
   source: number;
   target: number;
   weight?: number;
 }
 
-interface JSONGraph {
-  nodes?: JSONNode[];
-  edges?: JSONEdge[];
+/** Wire format for `parseGraphAsync('json', text)` after `JSON.parse`. */
+export interface GraphJsonDocument {
+  nodes?: GraphJsonNode[];
+  edges?: GraphJsonEdge[];
   /** When `nodes` is omitted, number of nodes (must cover all edge endpoint indices). */
   nodeCount?: number;
   /** Length should match node count; shorter arrays are padded, longer truncated. */
@@ -446,7 +447,7 @@ function topologyAwareSeedPositions(
 }
 
 function parseJSON(raw: string): ParseResult {
-  const graph: JSONGraph = JSON.parse(raw);
+  const graph: GraphJsonDocument = JSON.parse(raw);
 
   const hasNodes = Array.isArray(graph.nodes);
   const hasEdges = Array.isArray(graph.edges);

@@ -48,6 +48,13 @@ export class LODController {
     this.settings = { ...DEFAULT_SETTINGS, ...settings };
   }
 
+  /** Merge LOD knobs: **`DEFAULT_SETTINGS`** ∪ **`patch`** (omitted keys reset to defaults). Skip if **`patch`** is `undefined`. */
+  applySettings(patch?: Partial<LODSettings>): void {
+    if (patch === undefined) return;
+    const next = { ...DEFAULT_SETTINGS, ...patch };
+    Object.assign(this.settings, next);
+  }
+
   /**
    * Call once per frame. Returns the effective number of edges to render.
    */

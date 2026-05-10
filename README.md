@@ -7,8 +7,9 @@ This repository is a **workspace monorepo**:
 | Package             | Role                                                                                                 |
 | ------------------- | ---------------------------------------------------------------------------------------------------- |
 | **`@kortex/core`**  | Framework-agnostic **WebGL2** engine: renderer, graph buffers, layout, parsers, interaction helpers. |
-| **`@kortex/demo`**  | Reference **Vite** app showing how to wire core (datasets, panel, export).                           |
-| **`@kortex/react`** | Placeholder for future React bindings over core.                                                     |
+| **`@kortex/demo`**       | Reference **Vite** app (vanilla TS) — datasets, panel, export.                                       |
+| **`@kortex/react-demo`** | **Vite + React** sample using **`KortexCanvas`** (`npm run dev:react-demo`). |
+| **`@kortex/react`** | **`KortexCanvas`** — thin lifecycle bindings over **`@kortex/core`** (build: `npm run build --workspace=@kortex/react`). |
 
 **Integration:** [docs/USAGE.md](./docs/USAGE.md) · **Guidelines:** [docs/GUIDELINES.md](./docs/GUIDELINES.md) · **Backlog:** [docs/TODO.md](./docs/TODO.md) · **Shipped:** [docs/DONE.md](./docs/DONE.md) · **AI agents:** [AGENTS.md](./AGENTS.md)
 
@@ -19,7 +20,7 @@ npm install
 npm run dev
 ```
 
-Opens the demo dev server (typically <http://localhost:5173>). Orbit, zoom, and pan with mouse / wheel as indicated in the demo UI.
+Opens the vanilla demo (typically <http://localhost:5173>) — orbit, zoom, and pan per on-screen hints. For **`@kortex/react`**: **`npm run dev:react-demo`** (port **5174**).
 
 ## Repo scripts
 

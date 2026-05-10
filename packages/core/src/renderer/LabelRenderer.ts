@@ -101,6 +101,9 @@ const QUAD_VERTS = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]);
 
 const MAX_CHARS = 500_000;
 
+/** Max nodes whose labels fit one {@link LabelRenderer.buildLabels} pass (`MAX_CHARS / 20` glyph budget). */
+export const LABEL_MAX_NODES_PER_BUILD = (MAX_CHARS / 20) | 0;
+
 /** Fallback when sizes buffer is shorter than node index (aligned with {@link GraphStore} default radius). */
 const FALLBACK_NODE_RADIUS = 1;
 

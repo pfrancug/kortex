@@ -19,8 +19,6 @@ export interface CpuPickParams {
   sizes: Float32Array<ArrayBufferLike>;
   visibility: Uint8Array<ArrayBufferLike>;
   nodeCount: number;
-  /** Selected node index for the same 1.35× scale as the renderer, or `-1`. */
-  selectedIndex: number;
   cursorFbX: number;
   cursorFbY: number;
   viewportWidth: number;
@@ -132,13 +130,12 @@ function worldSphereRadius(
     view,
     positions,
     visibility,
-    selectedIndex,
     viewportHeight,
     minScreenSize,
   } = params;
   if (visibility[index] === 0) return -1;
 
-  const scale = index === selectedIndex ? 1.35 : 1.0;
+  const scale = 1.0;
   const j = index * 3;
   mulMat4Vec4(
     view,
@@ -263,7 +260,6 @@ function pickClosestNodeScreenDiskFallback(params: CpuPickParams): number {
     view,
     positions,
     visibility,
-    selectedIndex,
     minScreenSize,
   } = params;
 
@@ -278,7 +274,7 @@ function pickClosestNodeScreenDiskFallback(params: CpuPickParams): number {
   for (let i = 0; i < nodeCount; i++) {
     if (visibility[i] === 0) continue;
 
-    const scale = i === selectedIndex ? 1.35 : 1.0;
+    const scale = 1.0;
     const j = i * 3;
     mulMat4Vec4(
       view,

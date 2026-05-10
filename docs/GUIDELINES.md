@@ -18,7 +18,7 @@ Kortex is a **GPU-first, framework-agnostic** **WebGL2** toolkit for **3D graph 
 ### Explicit boundaries
 
 - **Core (`@kortex/core`)** must not depend on React or UI frameworks.
-- **`apps/demo`** is a reference wiring surface only — not the product API.
+- **`apps/demo`** and **`apps/react-demo`** are reference wiring surfaces only — not the product API.
 - Heavy algorithms belong in **workers** (or future WASM); avoid blocking the main thread.
 
 _(Historical MVP docs listed “layouts” as out of scope; **force-directed layout** is now shipped as optional **`ForceLayout`** in core.)_
@@ -31,15 +31,16 @@ _(Historical MVP docs listed “layouts” as out of scope; **force-directed lay
 repo/
   packages/
     core/     # @kortex/core — renderer, graph store, layout, parsers
-    react/    # @kortex/react — stub; future thin bindings
+    react/    # @kortex/react — thin bindings (KortexCanvas)
   apps/
-    demo/     # @kortex/demo — Vite + TypeScript reference app (vanilla UI)
+    demo/        # @kortex/demo — Vite + TypeScript (vanilla UI)
+    react-demo/  # @kortex/react-demo — Vite + React sample
 ```
 
 **Rules**
 
 - `packages/core` MUST NOT depend on React.
-- `apps/demo` consumes `@kortex/core` via workspace dependency only (treat like an external consumer).
+- **`apps/react-demo`** consumes **`@kortex/core`** and **`@kortex/react`** via workspace deps only (treat like external consumers).
 - Keep generated build artifacts out of version control.
 - Workspace tooling: **npm workspaces** (root `package.json`).
 
@@ -63,6 +64,13 @@ repo/
 | ------- | ------------------------------------------------------------------ |
 | UI      | **Vanilla TypeScript** + DOM (`SettingsPanel` HTML/CSS), not React |
 | Bundler | Vite                                                               |
+
+### `apps/react-demo`
+
+| Area    | Choice                          |
+| ------- | ------------------------------- |
+| UI      | **React** + **`@kortex/react`** |
+| Bundler | Vite (`@vitejs/plugin-react`)   |
 
 ---
 

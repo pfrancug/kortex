@@ -192,6 +192,25 @@ export class GraphStore {
   }
 
   /**
+   * Update edge segment colors for a subset of edges (RGBA per edge, same order as {@link edgeIndices} pairs).
+   */
+  updateEdgeColors(
+    colors: Uint8Array,
+    range?: { start: number; count: number },
+  ): void {
+    if (range) {
+      const byteOffset = range.start * 4;
+      const length = range.count * 4;
+      this.edgeColors.set(colors.subarray(0, length), byteOffset);
+      this.uploadEdgeColorRange(range.start, range.count);
+    } else {
+      const count = Math.min((colors.length / 4) | 0, this.edgeCount);
+      this.edgeColors.set(colors.subarray(0, count * 4), 0);
+      this.uploadEdgeColorRange(0, count);
+    }
+  }
+
+  /**
    * Update per-node billboard radii (length ≥ active node count unless `range` is set).
    */
   updateSizes(
@@ -400,6 +419,20 @@ export class GraphStore {
       buf.color,
       byteOffset,
       this.colors.subarray(byteOffset, byteOffset + count * 4),
+    );
+  }
+
+  private uploadEdgeColorRange(startEdge: number, count: number): void {
+    const gl = this.gl;
+    const buf = this.gpuBuffers;
+    if (!gl || !buf) return;
+    const byteOffset = startEdge * 4;
+    updateBufferRange(
+      gl,
+      gl.ARRAY_BUFFER,
+      buf.edgeColor,
+      byteOffset,
+      this.edgeColors.subarray(byteOffset, byteOffset + count * 4),
     );
   }
 

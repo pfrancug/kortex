@@ -155,7 +155,6 @@ export class PickingSystem {
     this.lastResolvedPickX = x;
     this.lastResolvedPickY = y;
 
-    const sel = this.selectedNode ?? -1;
     const pickParams = {
       view: camera.view,
       proj: camera.projection,
@@ -166,7 +165,6 @@ export class PickingSystem {
       sizes: this.graphSizes,
       visibility: this.graphVisibility,
       nodeCount: this.graphNodeCount,
-      selectedIndex: sel,
       cursorFbX: x,
       cursorFbY: y,
       viewportWidth,
@@ -239,7 +237,6 @@ export class PickingSystem {
       x < vw &&
       y < vh
     ) {
-      const sel = this.selectedNode ?? -1;
       const hit = pickClosestNodeScreen({
         view: cam.view,
         proj: cam.projection,
@@ -250,7 +247,6 @@ export class PickingSystem {
         sizes: this.graphSizes,
         visibility: this.graphVisibility,
         nodeCount: nc,
-        selectedIndex: sel,
         cursorFbX: x,
         cursorFbY: y,
         viewportWidth: vw,

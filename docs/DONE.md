@@ -10,7 +10,7 @@ Historical milestone checklist: **what has shipped**. Active backlog lives in **
 - [x] TypeScript across packages
 - [x] Shared ESLint + Prettier
 - [x] Vitest for `packages/core`
-- [x] CI: typecheck + lint + test (`.github/workflows/ci.yml`)
+- [x] CI: typecheck + build + lint + test (`.github/workflows/ci.yml`)
 - [x] ESM-first modules
 
 ---
@@ -78,6 +78,16 @@ _Gaps:_ dedicated octree/worker convergence tests; optional **`collision(radius)
 - [x] **`forceScaleMode`**, **`linkAttractionMode`**, **`integrationMode`**, **`clampVelocity`**, **`recenterOnFinish`**
 - [x] Demo advanced panel + preset regression tests (`forceLayoutPresets.test.ts`)
 - [x] Cleanup: single link-force loop path
+
+---
+
+## `@kortex/react` (Phase 12 — MVP)
+
+- [x] **`KortexCanvas`** — lifecycle-safe **`Renderer`**, forwards **`RendererOptions`** (`parent` internal); **`autoStart`**, **`onReady`**; declarative **`dataset`** / **`graph`**; optional auto **`ForceLayout`** when topology-only JSON suggests layout (`packages/react/src/KortexCanvas.tsx`)
+- [x] **`peerDependencies`**: `react`, `react-dom`; ESM **`dist/`** + declarations (`npm run build --workspace=@kortex/react`)
+- [x] **`apps/react-demo`** — **`KortexCanvas`** sample (**`npm run dev:react-demo`**, port 5174)
+
+_Follow-ups:_ **[TODO.md](./TODO.md)** — **`useCamera`**, **`usePicking`**, **`@testing-library/react`**.
 
 ---
 

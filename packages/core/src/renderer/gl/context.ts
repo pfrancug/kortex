@@ -35,7 +35,6 @@ export function createWebGL2Context(
     gl.ONE,
     gl.ONE_MINUS_SRC_ALPHA,
   );
-  gl.clearColor(0.06, 0.07, 0.09, 1);
   gl.clearDepth(1);
 
   return gl;

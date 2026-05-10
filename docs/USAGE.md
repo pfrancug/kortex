@@ -2,7 +2,7 @@
 
 **Related docs:** [GUIDELINES.md](./GUIDELINES.md) · [DONE.md](./DONE.md) · [TODO.md](./TODO.md) · [../AGENTS.md](../AGENTS.md) · [../README.md](../README.md)
 
-This repo is an npm workspace monorepo. **`@kortex/core`** is the engine; **`@kortex/demo`** is a reference app; **`@kortex/react`** is reserved for ergonomic React bindings (not implemented yet).
+This repo is an npm workspace monorepo. **`@kortex/core`** is the engine; **`@kortex/demo`** is the vanilla reference app; **`apps/react-demo`** is a **React + Vite** sample; **`@kortex/react`** ships **`KortexCanvas`** (see below).
 
 ---
 
@@ -70,32 +70,48 @@ Use the demo as the **canonical reference** when integrating **`@kortex/core`** 
 
 ---
 
+## `@kortex/react-demo`
+
+**Role:** Small **Vite + React** app that wires **`@kortex/react`** (**`KortexCanvas`**) without touching the vanilla demo.
+
+### Run
+
+```bash
+npm run dev:react-demo
+# or
+npm run dev --workspace=@kortex/react-demo
+```
+
+Dev server defaults to port **5174** (`vite.config.ts`). Sample graph: tetrahedron (**`src/App.tsx`**).
+
+---
+
 ## `@kortex/react`
 
-**Role (planned):** Thin React layer over **`@kortex/core`** — lifecycle-safe mounting, resize forwarding, optional context for renderer/graph handles.
+**Role:** Thin React layer over **`@kortex/core`** — lifecycle-safe **`Renderer`** mounting and declarative **`dataset`** / **`graph`** props.
 
-### Current state
+### Current state (MVP)
 
-`packages/react/src/index.ts` is a **stub** (`export {}`). There are **no hooks or components** yet.
+- **`KortexCanvas`** — Creates **`Renderer`** with `parent` set to an internal full-size `div`; **`dispose()`** on unmount. Forwards **`RendererOptions`** except **`parent`**; after mount, props stay applied (**`edgeOpacity`**, **`nodeSizeMultiplier`**, **`maxVisibleLabels`**, **`pixelRatioCap`**, **`showOverlay`**, **`lod`**). **`contextOptions`** apply only when the WebGL context is created — change them by remounting (React **`key`** on **`KortexCanvas`**). **`autoStart`** (default `true`) controls **`renderer.start()`**. Optional **`dataset`** (JSON text or object) is parsed with **`parseGraphAsync`** (`'json'`); topology-only results run **`ForceLayout`** automatically unless **`autoForceLayout`** is false. Typed buffers use **`graph`**. Imperative access via **`onReady(renderer)`**.
 
-### Intended direction (roadmap-level)
+Build output: **`npm run build --workspace=@kortex/react`** → **`dist/`** (ESM + `.d.ts`). **`peerDependencies`**: **`react`**, **`react-dom`** (^18 / ^19).
 
-Typical responsibilities for **`@kortex/react`** will include:
+### Roadmap
 
 | Piece                           | Purpose                                                                            |
 | ------------------------------- | ---------------------------------------------------------------------------------- |
-| **`KortexCanvas`** (or similar) | Mount **`Renderer`** on a `div` ref; create/dispose on unmount; observe resize.    |
-| **`useKortexRenderer`**         | Imperative handle: `renderer`, `graph`, `fitToData`, `start`/`stop` loop.          |
+| **`useCamera`** / **`usePicking`** | Narrow hooks around **`renderer.camera`** / **`renderer.picking`**              |
 | **`useForceLayout`**            | Wrap **`ForceLayout`**: start/stop from effects; expose running state + callbacks. |
-| **Optional context**            | Share renderer across panels (legend, HUD) without prop drilling.                  |
+| **`apps/react-demo`**           | Shipped minimal **Vite + React** sample — extend with **`ForceLayout`**, file load, etc., as needed |
+| **Tests**                       | **`@testing-library/react`** smoke tests                                           |
 
-The package already declares **`@kortex/core`** as a dependency; implementation should stay a **facade** — heavy logic remains in core.
+Heavy logic stays in **`@kortex/core`**.
 
 ---
 
 ## How implementation in an app looks
 
-Below are two sketches: **vanilla TypeScript** (matches core’s design today) and **React** (target shape once **`@kortex/react`** exists).
+Below are two sketches: **vanilla TypeScript** (matches core’s design today) and **React** via **`@kortex/react`**.
 
 ### 1. Vanilla TypeScript / bundler of choice
 
@@ -141,9 +157,29 @@ renderer.start();
 
 Your app adds **data fetching**, **auth**, **routing**, and **UI** around this spine — mirroring **`apps/demo/src/main.ts`** for force-layout policy and LOD if you need parity.
 
-### 2. React app (future-friendly)
+### 2. React (`@kortex/react`)
 
-Until **`@kortex/react`** ships, call **`@kortex/core`** from **`useEffect`** / **`useRef`**:
+```tsx
+import { KortexCanvas } from '@kortex/react';
+
+const graphJson = {
+  labels: ['a', 'b'],
+  edges: [{ source: 0, target: 1 }],
+  nodeCount: 2,
+};
+
+function GraphScene() {
+  return (
+    <KortexCanvas
+      dataset={graphJson}
+      onReady={(r) => r.fitToData()}
+      showOverlay={false}
+    />
+  );
+}
+```
+
+**Alternatively**, mount **`Renderer`** yourself from **`useEffect`** (same lifecycle **`KortexCanvas`** performs internally):
 
 ```tsx
 import { useEffect, useRef } from 'react';
@@ -168,7 +204,7 @@ export function GraphView() {
 }
 ```
 
-When **`@kortex/react`** is implemented, most of this boilerplate should collapse into a **`KortexCanvas`** component or **`useKortexRenderer`** hook while **`ForceLayout`** remains optional sibling logic (often tied to “Run layout” buttons or graph reload).
+When **`@kortex/react`** grows (narrow hooks, demos, tests), prefer **`KortexCanvas`** over duplicating mount boilerplate where props suffice.
 
 ### 3. Practical notes
 
@@ -187,5 +223,5 @@ When **`@kortex/react`** is implemented, most of this boilerplate should collaps
 | [TODO.md](./TODO.md)             | Active backlog                  |
 | [../AGENTS.md](../AGENTS.md)     | AI agent workflow               |
 | `packages/core/src/index.ts`     | Public exports                  |
-| `apps/demo/src/main.ts`          | End-to-end wiring               |
-| `packages/react/src/index.ts`    | Placeholder for React bindings  |
+| **`apps/react-demo/`**           | Vite + React sample (`KortexCanvas`)      |
+| `packages/react/src/`            | **`KortexCanvas`**                                        |

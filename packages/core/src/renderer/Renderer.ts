@@ -2,12 +2,16 @@ import { Camera } from './Camera';
 import { DebugOverlay } from './DebugOverlay';
 import { EdgeRenderer } from './EdgeRenderer';
 import { FrustumCuller } from './FrustumCuller';
-import { LabelRenderer } from './LabelRenderer';
+import { LabelRenderer, LABEL_MAX_NODES_PER_BUILD } from './LabelRenderer';
 import { NodeRenderer } from './NodeRenderer';
 import { OrbitControls } from './OrbitControls';
 import { RenderLoop } from './RenderLoop';
 import { createSdfAtlas } from './SdfAtlas';
 import { createWebGL2Context, type ContextOptions } from './gl/context';
+import {
+  normalizeBackgroundColor,
+  type BackgroundColor,
+} from './backgroundColor';
 import { GraphStore } from '../graph/GraphStore';
 import { ChunkIndex, type ChunkRange } from '../graph/ChunkIndex';
 import { PickingSystem } from '../interaction/PickingSystem';
@@ -35,19 +39,32 @@ export function clampPresentationScale(x: number): number {
   return Math.min(x, 1e6);
 }
 
-/** Clamp edge draw opacity for {@link Renderer.edgeOpacity} (invalid → `1`). */
+/** Clamp edge draw opacity for {@link Renderer.edgeOpacity} (invalid / non-positive → `0`). */
 export function clampEdgeOpacity(x: number): number {
   if (!Number.isFinite(x) || x <= 0) return 0;
   return Math.min(x, 1);
 }
 
-/** Upper bound on labeled nodes (matches {@link LabelRenderer} char budget `MAX_CHARS / 20`). */
-const MAX_VISIBLE_LABELS_HARD = 25_000;
+/** Clamp node billboard opacity for {@link Renderer.nodeOpacity} (same rules as {@link clampEdgeOpacity}). */
+export const clampNodeOpacity = clampEdgeOpacity;
+
+/**
+ * Explicit “use the label GPU maximum” ({@link LABEL_MAX_NODES_PER_BUILD} nodes per rebuild).
+ * Omitting {@link RendererOptions.maxVisibleLabels} already uses this budget; positive infinity is treated the same.
+ */
+export const MAX_VISIBLE_LABELS_UNLIMITED = -1;
 
 /** Clamp requested label-node budget for {@link Renderer.maxVisibleLabels}. */
 export function clampVisibleLabelCount(n: number): number {
+  if (
+    n === MAX_VISIBLE_LABELS_UNLIMITED ||
+    n === Infinity ||
+    n === Number.POSITIVE_INFINITY
+  ) {
+    return LABEL_MAX_NODES_PER_BUILD;
+  }
   if (!Number.isFinite(n) || n <= 0) return 0;
-  return Math.min(Math.floor(n), MAX_VISIBLE_LABELS_HARD);
+  return Math.min(Math.floor(n), LABEL_MAX_NODES_PER_BUILD);
 }
 
 /** Configuration for {@link Renderer} construction. */
@@ -58,7 +75,7 @@ export interface RendererOptions {
   pixelRatioCap?: number;
   /** Forwarded to `canvas.getContext('webgl2', ...)`. */
   contextOptions?: ContextOptions;
-  /** Show the debug overlay (FPS, draw calls, etc.). @defaultValue true */
+  /** Show the debug overlay (FPS, draw calls, etc.). @defaultValue false unless set true */
   showOverlay?: boolean;
   /** LOD / scalability settings. */
   lod?: Partial<LODSettings>;
@@ -69,11 +86,27 @@ export interface RendererOptions {
   nodeSizeMultiplier?: number;
   /**
    * Maximum nodes that receive text labels per frame (scan order; skips invisible nodes).
-   * @defaultValue 500
+   * When omitted, uses the largest budget the label path allows ({@link LABEL_MAX_NODES_PER_BUILD}).
+   * {@link MAX_VISIBLE_LABELS_UNLIMITED} and positive infinity match that same budget.
+   * Invalid / non-positive finite values → **0** (no labels).
    */
   maxVisibleLabels?: number;
   /** Edge line transparency — multiplied with per-edge alpha in the edge shader. @defaultValue 1 */
   edgeOpacity?: number;
+  /** Node billboard transparency — multiplied with per-node attribute alpha (and rim AA) in the node shader. @defaultValue 1 */
+  nodeOpacity?: number;
+  /**
+   * Color buffer clear color (`gl.clearColor`) each frame.
+   * CSS hex (`#RGB`, `#RRGGBB`, `#RRGGBBAA`) or linear **0–1** `[r,g,b]` / `[r,g,b,a]`.
+   * @defaultValue `'#0f1217'` (previous built-in context default).
+   */
+  backgroundColor?: BackgroundColor;
+  /**
+   * When **false**, the clicked node does not get the selection rim in {@link NodeRenderer}.
+   * {@link PickingSystem} still updates selection for **`onSelect`** callbacks.
+   * @defaultValue true
+   */
+  selectionHighlight?: boolean;
 }
 
 /**
@@ -98,7 +131,9 @@ export class Renderer {
   /** Mouse/touch orbit controls bound to the canvas. */
   readonly controls: OrbitControls;
   /** Debug overlay element, or `null` if disabled. */
-  readonly overlay: DebugOverlay | null;
+  get overlay(): DebugOverlay | null {
+    return this.debugOverlay;
+  }
   /** Graph data store — call `setNodes`/`setEdges` to populate. */
   readonly graph: GraphStore;
   /** Pointer picking (CPU, no readPixels) — fires hover/select callbacks. */
@@ -113,21 +148,49 @@ export class Renderer {
   nodeSizeMultiplier: number;
 
   /**
-   * Budget for how many nodes receive labels each frame (before glyph/instance limits).
-   * Clamped with {@link clampVisibleLabelCount} when building label batches.
+   * Budget for how many nodes receive labels each frame (before glyph/instance limits in {@link LabelRenderer}).
+   * Writable; values are clamped with {@link clampVisibleLabelCount}.
    */
   maxVisibleLabels: number;
 
   /**
-   * Global multiplier on edge fragment alpha ({@link EdgeRenderer.edgeAlpha}).
-   * Does not change stored {@link GraphStore.edgeColors}.
+   * Global multiplier on edge fragment alpha ({@link EdgeRenderer.edgeAlpha}), after per-edge attribute alpha from {@link GraphStore.edgeColors}.
+   * Does not change stored edge colors.
    */
   edgeOpacity: number;
+
+  /**
+   * Global multiplier on node billboard alpha after lighting (multiplies the attribute alpha from {@link GraphStore.colors}, then edge falloff in the fragment shader).
+   * Does not change stored colors.
+   */
+  nodeOpacity: number;
+
+  /**
+   * When **false**, {@link NodeRenderer} ignores {@link PickingSystem.selectedNode} for the selection rim.
+   */
+  selectionHighlight: boolean;
+
+  private _backgroundColor?: BackgroundColor;
+
+  /**
+   * Canvas clear color — same formats as {@link RendererOptions.backgroundColor}.
+   * Assigning **`undefined`** restores the package default (`#0f1217`).
+   */
+  get backgroundColor(): BackgroundColor | undefined {
+    return this._backgroundColor;
+  }
+
+  set backgroundColor(value: BackgroundColor | undefined) {
+    this._backgroundColor = value;
+    const n = normalizeBackgroundColor(value);
+    this.gl.clearColor(n[0], n[1], n[2], n[3]);
+  }
 
   private readonly parent: HTMLElement;
   private readonly loop: RenderLoop;
   private readonly resizeObserver: ResizeObserver;
-  private readonly pixelRatioCap: number;
+  private pixelRatioCap: number;
+  private debugOverlay: DebugOverlay | null = null;
   private nodeRenderer: NodeRenderer | null = null;
   private edgeRenderer: EdgeRenderer | null = null;
   private labelRenderer: LabelRenderer | null = null;
@@ -155,9 +218,11 @@ export class Renderer {
       options.nodeSizeMultiplier ?? 1,
     );
     this.maxVisibleLabels = clampVisibleLabelCount(
-      options.maxVisibleLabels ?? 500,
+      options.maxVisibleLabels ?? MAX_VISIBLE_LABELS_UNLIMITED,
     );
     this.edgeOpacity = clampEdgeOpacity(options.edgeOpacity ?? 1);
+    this.nodeOpacity = clampNodeOpacity(options.nodeOpacity ?? 1);
+    this.selectionHighlight = options.selectionHighlight !== false;
     this.parent = options.parent;
 
     if (!this.parent.style.position) {
@@ -171,12 +236,13 @@ export class Renderer {
     this.parent.appendChild(this.canvas);
 
     this.gl = createWebGL2Context(this.canvas, options.contextOptions);
+    this.backgroundColor = options.backgroundColor;
     this.camera = new Camera();
     this.controls = new OrbitControls(this.canvas, this.camera);
-    this.overlay =
-      options.showOverlay === false
-        ? null
-        : new DebugOverlay(this.parent, this.gl);
+    this.debugOverlay =
+      options.showOverlay === true
+        ? new DebugOverlay(this.parent, this.gl)
+        : null;
 
     this.graph = new GraphStore();
     this.graph.attach(this.gl);
@@ -267,13 +333,38 @@ export class Renderer {
     this.resizeObserver.disconnect();
     this.controls.dispose();
     this.beforeFrameCallback = null;
-    this.overlay?.dispose();
+    this.debugOverlay?.dispose();
+    this.debugOverlay = null;
     this.picking.dispose();
     this.labelRenderer?.dispose();
     this.edgeRenderer?.dispose();
     this.nodeRenderer?.dispose();
     this.graph.dispose();
     this.canvas.remove();
+  }
+
+  /**
+   * Updates the device-pixel-ratio cap used when sizing the canvas (see {@link RendererOptions.pixelRatioCap}).
+   */
+  setPixelRatioCap(cap: number): void {
+    const next = Number.isFinite(cap) && cap > 0 ? Math.min(cap, 16) : 2;
+    if (next === this.pixelRatioCap) return;
+    this.pixelRatioCap = next;
+    this.onResize();
+  }
+
+  /**
+   * Show or hide the debug stats overlay without reconstructing the renderer.
+   */
+  setShowOverlay(visible: boolean): void {
+    if (visible) {
+      if (!this.debugOverlay) {
+        this.debugOverlay = new DebugOverlay(this.parent, this.gl);
+      }
+    } else {
+      this.debugOverlay?.dispose();
+      this.debugOverlay = null;
+    }
   }
 
   private frame = (dt: number, now: number): void => {
@@ -369,8 +460,11 @@ export class Renderer {
           this.camera,
           this.height,
           this.picking.hoveredNode ?? -1,
-          this.picking.selectedNode ?? -1,
+          this.selectionHighlight
+            ? (this.picking.selectedNode ?? -1)
+            : -1,
           nodeMul,
+          clampNodeOpacity(this.nodeOpacity),
         );
         for (let i = 0; i < visibleNodeChunks; i++) {
           const c = this.nodeChunks[i];
@@ -494,3 +588,9 @@ export class Renderer {
     this.canvas.height = h;
   };
 }
+
+export type { BackgroundColor } from './backgroundColor';
+export {
+  normalizeBackgroundColor,
+  DEFAULT_BACKGROUND_COLOR,
+} from './backgroundColor';

@@ -67,6 +67,18 @@ describe('GraphStore (CPU-side)', () => {
     }
   });
 
+  it('updateEdgeColors replaces colors on CPU buffer', () => {
+    const store = new GraphStore();
+    store.setEdges(new Uint32Array([0, 1, 1, 2]));
+    store.updateEdgeColors(
+      new Uint8Array([
+        1, 2, 3, 4, 5, 6, 7, 8,
+      ]),
+    );
+    expect(store.edgeColors[0]).toBe(1);
+    expect(store.edgeColors[7]).toBe(8);
+  });
+
   it('visibility defaults to 1 (visible)', () => {
     const store = new GraphStore();
     store.setNodes(new Float32Array(9));

@@ -6,7 +6,12 @@
 
 ## Quality & tests
 
-### Labels
+### Labels & layout UX
+
+- [ ] **`maxVisibleLabels`** — prioritize largest nodes (by stored radius) when choosing which labels to build, before chunk/instance caps (closest-to-camera label bias deferred).
+- [ ] **Stable layout across graph refetch** — preserve world positions for unchanged node ids when merging new API data (like joiner `nodesByIdRef` + ForceGraph simulation continuity).
+
+### Labels (GPU / tests)
 
 - [ ] Dedicated tests for SDF / label instance buffer packing (`LabelRenderer` / `SdfAtlas`)
 
@@ -21,15 +26,12 @@ Existing partial suites: `GraphStore`, `LODController`, `ClusterLOD`, `ChunkInde
 
 ---
 
-## Post-MVP — `@kortex/react` (Phase 12)
+## Post-MVP — `@kortex/react` (Phase 12 follow-ups)
 
-- [ ] **`<KortexGraph>`** (or equivalent) — lifecycle-safe **`Renderer`**, props sync
-- [ ] **`useRenderer`**, **`useCamera`**, **`usePicking`** hooks (or narrowed API)
-- [ ] **`peerDependencies`**: `react`, `react-dom`; ESM + declarations build
-- [ ] Optional **`apps/react-demo`** or migrate demo incrementally
+MVP shipped → **[DONE.md](./DONE.md)** (**`KortexCanvas`**, **`dist/`** build).
+
+- [ ] **`useCamera`**, **`usePicking`** hooks (or narrowed API)
 - [ ] Tests with **`@testing-library/react`**
-
-_Package stub:_ `packages/react/src/index.ts` (`export {}`).
 
 ---
 
@@ -84,7 +86,7 @@ _(Design decisions — resolve during tuning / dogfooding.)_
 | Order | Track                         | Notes                                      |
 | ----- | ----------------------------- | ------------------------------------------ |
 | 1     | Tests (labels + force worker) | Protect regressions before large refactors |
-| 2     | `@kortex/react`               | Unlocks ecosystem adopters                 |
+| 2     | `@kortex/react` follow-ups    | **`useCamera`** / **`usePicking`**, RTL tests |
 | 3     | Analytics                     | Builds on existing filter/sizing math      |
 | 4     | Bundling / WebGPU / WASM / VR | Heavy architecture lifts                   |
 
@@ -92,4 +94,4 @@ _(Design decisions — resolve during tuning / dogfooding.)_
 
 ## Completed milestones
 
-See **[DONE.md](./DONE.md)** (MVP phases 0–9, labels & force major chunks, physics roadmap A–E).
+Active backlog items live above. Shipped work (including **`@kortex/react`** MVP) → **[DONE.md](./DONE.md)**.

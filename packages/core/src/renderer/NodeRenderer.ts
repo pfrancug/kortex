@@ -34,9 +34,9 @@ void main() {
   float scale = 1.0;
   float hl = 0.0;
   int id = gl_InstanceID + u_instanceOffset;
-  // Selected: slight scale pop (rare). Hover: **no** scale change — only rim tint below — otherwise
-  // the cursor sweep constantly retargets hover and 1.2× resizing reads as “everything shakes”.
-  if (id == u_selectedId) { scale = 1.35; hl = 1.0; }
+  // Selected / hover: rim tint only — **no** scale change (click must not grow the hit disc).
+  // Hover avoids scale so cursor sweep does not read as “everything shakes”.
+  if (id == u_selectedId) { hl = 1.0; }
   else if (id == u_hoveredId) { hl = 0.55; }
 
   vec4 viewCenter = u_view * vec4(a_center, 1.0);
@@ -67,6 +67,8 @@ void main() {
 const FRAG = `#version 300 es
 precision highp float;
 
+uniform float u_nodeOpacity;
+
 in vec2 v_uv;
 in vec4 v_color;
 flat in float v_highlight;
@@ -89,7 +91,7 @@ void main() {
   color = mix(color, vec3(1.0), v_highlight * 0.45);
 
   float edge = 1.0 - smoothstep(0.44, 0.5, sqrt(r2));
-  fragColor = vec4(color, v_color.a * edge);
+  fragColor = vec4(color, v_color.a * edge * u_nodeOpacity);
 }`;
 
 // ── Unit quad (triangle strip) ─────────────────────────────────────
@@ -109,6 +111,7 @@ const UNIFORM_NAMES = [
   'u_viewportHeight',
   'u_minScreenSize',
   'u_nodeSizeScale',
+  'u_nodeOpacity',
 ] as const;
 
 // ── Renderer ───────────────────────────────────────────────────────
@@ -179,6 +182,7 @@ export class NodeRenderer {
     hoveredId = -1,
     selectedId = -1,
     nodeSizeScale = 1,
+    nodeOpacity = 1,
   ): void {
     if (nodeCount === 0) return;
     const gl = this.gl;
@@ -191,6 +195,7 @@ export class NodeRenderer {
     gl.uniform1f(this.uniforms.u_viewportHeight, viewportHeight);
     gl.uniform1f(this.uniforms.u_minScreenSize, this.minScreenSize);
     gl.uniform1f(this.uniforms.u_nodeSizeScale, nodeSizeScale);
+    gl.uniform1f(this.uniforms.u_nodeOpacity, nodeOpacity);
     gl.bindVertexArray(this.vao);
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, nodeCount);
     gl.bindVertexArray(null);
@@ -206,6 +211,7 @@ export class NodeRenderer {
     hoveredId = -1,
     selectedId = -1,
     nodeSizeScale = 1,
+    nodeOpacity = 1,
   ): void {
     const gl = this.gl;
     gl.useProgram(this.program);
@@ -216,6 +222,7 @@ export class NodeRenderer {
     gl.uniform1f(this.uniforms.u_viewportHeight, viewportHeight);
     gl.uniform1f(this.uniforms.u_minScreenSize, this.minScreenSize);
     gl.uniform1f(this.uniforms.u_nodeSizeScale, nodeSizeScale);
+    gl.uniform1f(this.uniforms.u_nodeOpacity, nodeOpacity);
     gl.bindVertexArray(this.vao);
   }
 

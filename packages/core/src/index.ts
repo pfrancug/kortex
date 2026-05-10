@@ -4,12 +4,17 @@ export {
   Renderer,
   clampPresentationScale,
   clampEdgeOpacity,
+  clampNodeOpacity,
   clampVisibleLabelCount,
+  MAX_VISIBLE_LABELS_UNLIMITED,
+  normalizeBackgroundColor,
+  DEFAULT_BACKGROUND_COLOR,
 } from './renderer/Renderer';
 export type {
   RendererOptions,
   DrawCallback,
   BeforeFrameCallback,
+  BackgroundColor,
 } from './renderer/Renderer';
 
 export { GraphStore } from './graph/GraphStore';
@@ -75,6 +80,9 @@ export type {
   ParseRequest,
   ParseResult,
   ParseError,
+  GraphJsonNode,
+  GraphJsonEdge,
+  GraphJsonDocument,
 } from './workers/GraphParseWorker';
 
 // ── Advanced / Internal ─────────────────────────────────────────────
@@ -84,7 +92,7 @@ export type {
 export { NodeRenderer } from './renderer/NodeRenderer';
 export { EdgeRenderer } from './renderer/EdgeRenderer';
 export { PickRenderer } from './renderer/PickRenderer';
-export { LabelRenderer } from './renderer/LabelRenderer';
+export { LabelRenderer, LABEL_MAX_NODES_PER_BUILD } from './renderer/LabelRenderer';
 export { createSdfAtlas, measureText } from './renderer/SdfAtlas';
 export type { SdfAtlasData, GlyphMetrics } from './renderer/SdfAtlas';
 export { FrustumCuller } from './renderer/FrustumCuller';
