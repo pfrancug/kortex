@@ -1,6 +1,6 @@
 {
   "name": "@nexgraph/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React bindings for Nexgraph (@nexgraph/core)",
   "keywords": [
     "react",
@@ -33,7 +33,7 @@
     "ts": "tsc --noEmit"
   },
   "dependencies": {
-    "@nexgraph/core": "^0.1.0"
+    "@nexgraph/core": "^0.1.3"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
